@@ -21,9 +21,12 @@ function MyGame() {
     this.mCamera = null;
     this.mBg = null;
 
-    this.mMsg = null;
+    //this.mMsg = null;
+    this.vCanvas = null;
     this.vMessages = null;
     this.vMsgBg = null;
+    
+    this.testCam = null;
     
     // viewports
     this.viewports = null;
@@ -57,6 +60,7 @@ MyGame.prototype.unloadScene = function () {
 
 MyGame.prototype.initialize = function () {
     // color variable
+    // I wrote the hexToRgb utility to help with better colors -- Scott
     var c; 
     // objects
     this.mBrain = new Brain(this.kMinionSprite);
@@ -77,14 +81,14 @@ MyGame.prototype.initialize = function () {
     this.mCamera = new Camera(
         vec2.fromValues(0, 0),                                                  // position of the camera
         250,                                                                    // width of camera
-        [0, -50, 940, 640]                                                        // viewport (orgX, orgY, width, height)
+        [0, 0, 940, 640]                                                        // viewport (orgX, orgY, width, height)
     );
-    // I wrote this utility to help with better colors -- Scott
     c = hexToRgb("14213d");
     this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
             
     
     this.viewports = new Array(4);
+    this.vCanvas = new Array(5);
     this.vMessages = new Array(5);  
     this.vMsgBg = new Array(5);
     // vars
@@ -106,6 +110,13 @@ MyGame.prototype.initialize = function () {
             50,                                                                 // width of viewport
             [vSpawnX, 840 - viewportWidth, viewportWidth, viewportWidth]        // viewport (orgX, orgY, width, height)
          );
+         // viewport canvas (camera on top)
+         this.vCanvas[i] = new Camera(
+            vec2.fromValues(0, 0),                                                  // position of the camera
+            50,                                                                   // width of camera
+            [vSpawnX, 840 - viewportWidth, viewportWidth, 30]
+        );
+        this.vCanvas[i].setBackgroundColor([c.r, c.g, c.b, c.a]);
          // view port message
          /* This is extra
           * TODO
@@ -113,7 +124,7 @@ MyGame.prototype.initialize = function () {
          this.vMessages[i] = new FontRenderable("Test Msg " + i);
          c = hexToRgb("14213d");
          this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
-         this.vMessages[i].getXform().setPosition(-10,-21);
+         this.vMessages[i].getXform().setPosition(-10,1);
          this.vMessages[i].setTextHeight(5);
          
          /* viewport message background
@@ -128,19 +139,25 @@ MyGame.prototype.initialize = function () {
         // increment viewport spacing
         vSpawnX += viewportWidth;
     }
+    // from spec 
+    this.viewports[0].setWCWidth(15);
     
-    // in message and background [4]
-    this.vMessages[i] = new FontRenderable("Mosue Position");
-    c = hexToRgb("14213d");
-    this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
-    this.vMessages[i].getXform().setPosition(-10,-21);
-    this.vMessages[i].setTextHeight(5);
-    // BG
-    this.vMsgBg[i] = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    // mouse pos/ main window canvas
+    this.vCanvas[4] = new Camera(
+            vec2.fromValues(0, 0),                                                  // position of the camera
+            250,                                                                   // width of camera
+            [0, 0, 940, 30]
+        );
     c = hexToRgb("e5e5e5");
-    this.vMsgBg[i].setColor([c.r, c.g, c.b, c.a]);
-    this.vMsgBg[i].getXform().setPosition(940 / -2, 640 / -2);
-    this.vMsgBg[i].getXform().setSize(940, 6);
+    this.vCanvas[4].setBackgroundColor([c.r, c.g, c.b, c.a]);
+    // in message and background [4]
+    this.vMessages[4] = new FontRenderable("Mosue Position");
+    c = hexToRgb("14213d");
+    this.vMessages[4].setColor([c.r, c.g, c.b, c.a]);
+    this.vMessages[4].getXform().setPosition(-25,0);
+    this.vMessages[4].setTextHeight(5);
+    // BG
+    this.vMsgBg[4] = new Renderable(gEngine.DefaultResources.getConstColorShader());
     
     // Large background image
     var bgR = new SpriteRenderable(this.space);
@@ -148,13 +165,6 @@ MyGame.prototype.initialize = function () {
     bgR.getXform().setSize(250, 250);
     bgR.getXform().setPosition(0, 0);
     this.mBg = new GameObject(bgR);
-
-    
-
-    this.mMsg = new FontRenderable("Status Message");
-    this.mMsg.setColor([1, 1, 1, 1]);
-    this.mMsg.getXform().setPosition(1, 14);
-    this.mMsg.setTextHeight(3);
 };
 
 
@@ -170,26 +180,25 @@ MyGame.prototype.drawCamera = function (camera) {
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 MyGame.prototype.draw = function () {
-    // Step A: clear the canvas
+    //**Canvas / UI elements must be drawn last**
     var c = hexToRgb("14213d");
     gEngine.Core.clearCanvas([c.r, c.g, c.b, c.a]);
-    // with main camera
-    
-    // Step  B: Draw with all three cameras
-    //this.drawCamera(this.canvas);
     
     this.drawCamera(this.mCamera);
-    this.mMsg.draw(this.mCamera);                                               // only draw status in the main camera
+    //this.mMsg.draw(this.mCamera);       
+    // only draw status in the main camera
     
-    
+    // viewports
     for(var i = 0; i < this.viewports.length; i++){
         this.drawCamera(this.viewports[i]);
-        this.vMsgBg[i].draw(this.viewports[i]);
-        this.vMessages[i].draw(this.viewports[i]);
     }
-    // not working
-    //this.drawCamera(this.vBackground);
     
+    //**Canvas / UI elements must be drawn last**
+    for(var i = 0; i < this.vCanvas.length; i++){
+        this.vCanvas[i].setupViewProjection();
+        this.vMsgBg[i].draw(this.vCanvas[i]);
+        this.vMessages[i].draw(this.vCanvas[i]);
+    }
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
@@ -198,11 +207,12 @@ MyGame.prototype.update = function () {
     var zoomDelta = 0.05;
     var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
 
+    
     this.mCamera.update(); 
     for(var i = 0; i < this.viewports.length; i++){
         this.viewports[i].update();
     }
-
+    
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
 
@@ -275,8 +285,6 @@ MyGame.prototype.update = function () {
     //var vp = this.viewports[0].
     var heroPos = this.mHero.getXform().getPosition();
     this.viewports[0].setWCCenter(heroPos[0], heroPos[1]);
-    this.vMessages[0].getXform().setPosition(heroPos[0] - 10, heroPos[1] - 21);
-    this.vMsgBg[0].getXform().setPosition(heroPos[0] - 10, heroPos[1] - 22);
 
     msg = "";
     // testing the mouse input
@@ -303,5 +311,5 @@ MyGame.prototype.update = function () {
     }
 
     msg += " X=" + gEngine.Input.getMousePosX() + " Y=" + gEngine.Input.getMousePosY();
-    this.mMsg.setText(msg);
+    this.vMessages[4].setText(msg);
 };

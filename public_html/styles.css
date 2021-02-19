@@ -12,7 +12,7 @@ h1{
 	position: relative;
 	background-color: #14213D;
 	text-align: center;
-	font: italic bold 18px Georgia, serif;
+	font: italic bold 14px Georgia, serif;
 	color: #E5E5E5;
 	
 }
@@ -22,7 +22,7 @@ h2{
 
 p{
 	text-align: left;
-	font: italic bold 14px Georgia, serif;
+	font: italic bold 12px Georgia, serif;
 	color: #E5E5E5;
 	
 }
@@ -38,12 +38,12 @@ div.controls {
 	position: relative; 
 	width: 940px;
 	background-color: #E5E5E5;
-    font: italicbold 22px Georgia, serif;
-	
+    font: italicbold 14px Georgia, serif;
+	height: 250px;
 }
   * {
       box-sizing: border-box;
-	  
+	  height: auto;
    } 
    .left, .right, .center, .right2 {
 	  border: 3px solid #E5E5E5;
@@ -74,5 +74,5 @@ div.controls {
 		background-color: #E5E5E5;
    }
    .container:after {
-      clear: both;
+      
    }
