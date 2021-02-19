@@ -15,17 +15,19 @@ function MyGame() {
     this.kMinionSprite = "assets/minion_sprite.png";
     this.kMinionPortal = "assets/minion_portal.png";
     this.kBg = "assets/bg.png";
+    this.space = "assets/space.png";
 
     // The camera to view the scene
     this.mCamera = null;
-    this.mHeroCam = null;
     this.mBg = null;
 
     this.mMsg = null;
     this.vMessages = null;
+    this.vMsgBg = null;
     
     // viewports
     this.viewports = null;
+    this.vBackground = null;
 
     // the hero and the support objects
     this.mHero = null;
@@ -43,76 +45,111 @@ MyGame.prototype.loadScene = function () {
     gEngine.Textures.loadTexture(this.kMinionSprite);
     gEngine.Textures.loadTexture(this.kMinionPortal);
     gEngine.Textures.loadTexture(this.kBg);
+    gEngine.Textures.loadTexture(this.space);
 };
 
 MyGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.kMinionSprite);
     gEngine.Textures.unloadTexture(this.kMinionPortal);
     gEngine.Textures.unloadTexture(this.kBg);
+    gEngine.Textures.unloadTexture(this.space);
 };
 
 MyGame.prototype.initialize = function () {
-    // Step A: set up the cameras
+    // color variable
+    var c; 
+    // objects
+    this.mBrain = new Brain(this.kMinionSprite);
+    this.mHero = new Hero(this.kMinionSprite);
+    this.mPortal = new TextureObject(this.kMinionPortal, 50, 30, 10, 10);
+    
+    this.mLMinion = new Minion(this.kMinionSprite, 30, 30);
+    this.mRMinion = new Minion(this.kMinionSprite, 70, 30);
+    this.mFocusObj = this.mHero;
+    
+    this.vBackground = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    c = hexToRgb("14213d");
+    this.vBackground.setColor([c.r, c.g, c.b, c.a]);
+    this.vBackground.getXform().setPosition(10, 10);
+    this.vBackground.getXform().setSize(10, 10);
+
+    // main camera
     this.mCamera = new Camera(
         vec2.fromValues(0, 0),                                                  // position of the camera
-        100,                                                                    // width of camera
-        [0, 0, 940, 800]                                                        // viewport (orgX, orgY, width, height)
+        250,                                                                    // width of camera
+        [0, -50, 940, 640]                                                        // viewport (orgX, orgY, width, height)
     );
     // I wrote this utility to help with better colors -- Scott
-    var c = hexToRgb("313238");
+    c = hexToRgb("14213d");
     this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
             
-    // view ports
-    /* TODO -- Scott
-     * - add background renderable for boarded
-     */
+    
     this.viewports = new Array(4);
-    this.vMessages = new Array(4);  
+    this.vMessages = new Array(5);  
+    this.vMsgBg = new Array(5);
     // vars
     var viewportPadding = 10;
     var vSpawnX = 0;
     for(var i = 0; i < 4; i++){
+        // view ports
+        /* TODO -- Scott
+         * - add background renderable for boarded
+         * viewports[0] - Hero centered
+         * viewports[1] -
+         * viewports[2] -
+         * viewports[3] - 
+         */
         var viewportWidth = ((940 - (viewportPadding * (4 + 1))) / 4);
         vSpawnX += viewportPadding;
         this.viewports[i] = new Camera(
             vec2.fromValues(0, 0),                                              // position of the viewport
-            40,                                                                 // width of viewport
-            [vSpawnX, 800 - viewportWidth, viewportWidth, viewportWidth]        // viewport (orgX, orgY, width, height)
+            50,                                                                 // width of viewport
+            [vSpawnX, 840 - viewportWidth, viewportWidth, viewportWidth]        // viewport (orgX, orgY, width, height)
          );
+         // view port message
+         /* This is extra
+          * TODO
+          */
          this.vMessages[i] = new FontRenderable("Test Msg " + i);
-         c = hexToRgb("FCA311");
+         c = hexToRgb("14213d");
          this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
-         this.vMessages[i].getXform().setPosition(0,0);
-         this.vMessages[i].setTextHeight(3);
- 
+         this.vMessages[i].getXform().setPosition(-10,-21);
+         this.vMessages[i].setTextHeight(5);
+         
+         /* viewport message background
+          * 
+          */
+        this.vMsgBg[i] = new Renderable(gEngine.DefaultResources.getConstColorShader());
+        c = hexToRgb("e5e5e5");
+        this.vMsgBg[i].setColor([c.r, c.g, c.b, c.a]);
+        this.vMsgBg[i].getXform().setPosition(-10,-22);
+        this.vMsgBg[i].getXform().setSize(viewportWidth, 6);
+       
+        // increment viewport spacing
         vSpawnX += viewportWidth;
-        
-        
     }
     
-    this.mHeroCam = new Camera(
-        vec2.fromValues(50, 30),    // will be updated at each cycle to point to hero
-        20,
-        [490, 330, 150, 150],
-        2                           // viewport bounds
-    );
-    this.mHeroCam.setBackgroundColor([0.85, 0.8, 0.8, 1]);
-    
+    // in message and background [4]
+    this.vMessages[i] = new FontRenderable("Mosue Position");
+    c = hexToRgb("14213d");
+    this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
+    this.vMessages[i].getXform().setPosition(-10,-21);
+    this.vMessages[i].setTextHeight(5);
+    // BG
+    this.vMsgBg[i] = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    c = hexToRgb("e5e5e5");
+    this.vMsgBg[i].setColor([c.r, c.g, c.b, c.a]);
+    this.vMsgBg[i].getXform().setPosition(940 / -2, 640 / -2);
+    this.vMsgBg[i].getXform().setSize(940, 6);
     
     // Large background image
-    var bgR = new SpriteRenderable(this.kBg);
+    var bgR = new SpriteRenderable(this.space);
     bgR.setElementPixelPositions(0, 1024, 0, 1024);
-    bgR.getXform().setSize(150, 150);
+    bgR.getXform().setSize(250, 250);
     bgR.getXform().setPosition(0, 0);
     this.mBg = new GameObject(bgR);
 
-    // Objects in the scene
-    this.mBrain = new Brain(this.kMinionSprite);
-    this.mHero = new Hero(this.kMinionSprite);
-    this.mPortal = new TextureObject(this.kMinionPortal, 50, 30, 10, 10);
-    this.mLMinion = new Minion(this.kMinionSprite, 30, 30);
-    this.mRMinion = new Minion(this.kMinionSprite, 70, 30);
-    this.mFocusObj = this.mHero;
+    
 
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([1, 1, 1, 1]);
@@ -130,23 +167,29 @@ MyGame.prototype.drawCamera = function (camera) {
     this.mLMinion.draw(camera);
     this.mRMinion.draw(camera);
 };
-
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 MyGame.prototype.draw = function () {
     // Step A: clear the canvas
-    gEngine.Core.clearCanvas([0.9, 0.9, 0.9, 1.0]); // clear to light gray
-
+    var c = hexToRgb("14213d");
+    gEngine.Core.clearCanvas([c.r, c.g, c.b, c.a]);
+    // with main camera
+    
     // Step  B: Draw with all three cameras
+    //this.drawCamera(this.canvas);
+    
     this.drawCamera(this.mCamera);
-    this.mMsg.draw(this.mCamera);   // only draw status in the main camera
-    this.drawCamera(this.mHeroCam);
-    //this.drawCamera(this.mBrainCam);
+    this.mMsg.draw(this.mCamera);                                               // only draw status in the main camera
+    
     
     for(var i = 0; i < this.viewports.length; i++){
         this.drawCamera(this.viewports[i]);
+        this.vMsgBg[i].draw(this.viewports[i]);
         this.vMessages[i].draw(this.viewports[i]);
     }
+    // not working
+    //this.drawCamera(this.vBackground);
+    
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
@@ -155,10 +198,7 @@ MyGame.prototype.update = function () {
     var zoomDelta = 0.05;
     var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
 
-    this.mCamera.update();  // for smoother camera movements
-    this.mHeroCam.update();
-    //this.mBrainCam.update();
-    
+    this.mCamera.update(); 
     for(var i = 0; i < this.viewports.length; i++){
         this.viewports[i].update();
     }
@@ -167,13 +207,13 @@ MyGame.prototype.update = function () {
     this.mRMinion.update();
 
     this.mHero.update();     // for WASD movement
+    
     this.mPortal.update(     // for arrow movement
         gEngine.Input.keys.Up,
         gEngine.Input.keys.Down,
         gEngine.Input.keys.Left,
         gEngine.Input.keys.Right
     );
-
     // Brain chasing the hero
     var h = [];
     if (!this.mHero.pixelTouches(this.mBrain, h)) {
@@ -181,6 +221,10 @@ MyGame.prototype.update = function () {
         GameObject.prototype.update.call(this.mBrain);
     }
 
+    /* Legacy code
+     * TODO
+     * - go throguh and see if we can salvage anything
+     */
     // Pan camera to object
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.L)) {
         this.mFocusObj = this.mLMinion;
@@ -225,8 +269,14 @@ MyGame.prototype.update = function () {
     }
 
     // set the hero and brain cams    
-    this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
-    //this.mBrainCam.panTo(this.mBrain.getXform().getXPos(), this.mBrain.getXform().getYPos());
+    //this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
+    // set v[0] to hero
+    //this.viewports[0].panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos()); // viewport (orgX, orgY, width, height)
+    //var vp = this.viewports[0].
+    var heroPos = this.mHero.getXform().getPosition();
+    this.viewports[0].setWCCenter(heroPos[0], heroPos[1]);
+    this.vMessages[0].getXform().setPosition(heroPos[0] - 10, heroPos[1] - 21);
+    this.vMsgBg[0].getXform().setPosition(heroPos[0] - 10, heroPos[1] - 22);
 
     msg = "";
     // testing the mouse input
@@ -239,10 +289,10 @@ MyGame.prototype.update = function () {
     }
 
     if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Middle)) {
-        if (this.mHeroCam.isMouseInViewport()) {
-            this.mHero.getXform().setXPos(this.mHeroCam.mouseWCX());
-            this.mHero.getXform().setYPos(this.mHeroCam.mouseWCY());
-        }
+        //if (this.mHeroCam.isMouseInViewport()) {
+            //this.mHero.getXform().setXPos(this.mHeroCam.mouseWCX());
+            //this.mHero.getXform().setYPos(this.mHeroCam.mouseWCY());
+        //as}
     }
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Right)) {
         this.mPortal.setVisibility(false);

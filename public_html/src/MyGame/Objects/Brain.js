@@ -28,6 +28,7 @@ gEngine.Core.inheritPrototype(Brain, GameObject);
 Brain.prototype.update = function () {
     GameObject.prototype.update.call(this);  // default moving forward
 
+
     var xf = this.getXform();
     var fdir = this.getCurrentFrontDir();
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {

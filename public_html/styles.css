@@ -1,9 +1,10 @@
 canvas {
 	border: 3px solid #E5E5E5;
+	background-color: #14213D;
 	position: center;
 }
 body{
-	background-color: #14213D;
+	background-color: #14213d;
 	width: auto;
 }
 
@@ -11,17 +12,17 @@ h1{
 	position: relative;
 	background-color: #14213D;
 	text-align: center;
-	font: italic small-caps bold 18px Georgia, serif;
+	font: italic bold 18px Georgia, serif;
 	color: #E5E5E5;
 	
 }
 h2{
-	
+	text-decoration: underline;
 }
 
 p{
 	text-align: left;
-	font: italic small-caps bold 14px Georgia, serif;
+	font: italic bold 14px Georgia, serif;
 	color: #E5E5E5;
 	
 }
@@ -29,32 +30,48 @@ p.c{
 	color: #313238;
 }
 
+.key{
+	text-transform: uppercase;
+}
+
 div.controls {
 	position: relative; 
+	width: 940px;
 	background-color: #E5E5E5;
-    font: italic small-caps bold 22px Georgia, serif;
+    font: italicbold 22px Georgia, serif;
 	
-   }
-   * {
+}
+  * {
       box-sizing: border-box;
-   }
-   .left, .right, .center {
+	  
+   } 
+   .left, .right, .center, .right2 {
+	  border: 3px solid #E5E5E5;
       float: left;
-      width: 33%;
-      color: white;
-      padding: 10px;
+      width: 25%;
+	  color: #E5E5E5;
       height: 100%;
       text-align: center;
    }
    .left {
+	  padding: 10px;
       background-color: #313238;
    }
    .center {
+	  padding: 10px;
 	  color: #313238;
+	  border-color: #313238;
       background-color: #E5E5E5;
    }
    .right {
+	  padding: 10px;
       background-color: #313238;
+   }
+   .right2{
+		padding: 10px;
+		color: #313238;
+		border-color: #313238;
+		background-color: #E5E5E5;
    }
    .container:after {
       clear: both;

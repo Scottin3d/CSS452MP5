@@ -5,7 +5,7 @@
             <url>public_html/src/MyGame/MyGame.js</url>
             <bookmark id="1">
                 <name/>
-                <line>99</line>
+                <line>129</line>
                 <key/>
             </bookmark>
         </file>
@@ -16,9 +16,19 @@
         <group name="AllBookProjects"/>
         <group name="Apress-2d-game-engine"/>
         <group>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Cameras/Camera.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Minion.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Renderables/SpriteRenderable.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Hero.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/index.html</file>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/utilities.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/GameObjects/GameObject.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/DyePack.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Renderables/FontRenderable.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Renderables/Renderable.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Utils/Transform.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/TextureObject.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/MyGame.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Brain.js</file>
         </group>
     </open-files>
 </project-private>
