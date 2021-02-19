@@ -7,11 +7,11 @@ font24 = "assets/fonts/Consolas-24";
 font16 = "assets/fonts/Consolas-16";
 
 
-/// <summary>
-/// Converts a hexadecimal color to RGBA 1
-/// </summary>
-/// <param name="hex">The hexadecimal to be converted.</param>
-/// <returns>A dictionary of 0-1 RGBA values.</returns>
+/*
+ *Converts a hexadecimal color to RGBA 1.
+ *@param    {object} hex    The hexadecimal to be converted
+ *@return   {object}        A dictionary of 0-1 RGBA values or null if invalid
+ */
 function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {

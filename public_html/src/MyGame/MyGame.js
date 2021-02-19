@@ -19,10 +19,13 @@ function MyGame() {
     // The camera to view the scene
     this.mCamera = null;
     this.mHeroCam = null;
-    this.mBrainCam = null;
     this.mBg = null;
 
     this.mMsg = null;
+    this.vMessages = null;
+    
+    // viewports
+    this.viewports = null;
 
     // the hero and the support objects
     this.mHero = null;
@@ -51,14 +54,42 @@ MyGame.prototype.unloadScene = function () {
 MyGame.prototype.initialize = function () {
     // Step A: set up the cameras
     this.mCamera = new Camera(
-        vec2.fromValues(50, 36), // position of the camera
-        100,                       // width of camera
-        [0, 0, 940, 600]           // viewport (orgX, orgY, width, height)
+        vec2.fromValues(0, 0),                                                  // position of the camera
+        100,                                                                    // width of camera
+        [0, 0, 940, 800]                                                        // viewport (orgX, orgY, width, height)
     );
+    // I wrote this utility to help with better colors -- Scott
     var c = hexToRgb("313238");
     this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
-            // sets the background to gray
-
+            
+    // view ports
+    /* TODO -- Scott
+     * - add background renderable for boarded
+     */
+    this.viewports = new Array(4);
+    this.vMessages = new Array(4);  
+    // vars
+    var viewportPadding = 10;
+    var vSpawnX = 0;
+    for(var i = 0; i < 4; i++){
+        var viewportWidth = ((940 - (viewportPadding * (4 + 1))) / 4);
+        vSpawnX += viewportPadding;
+        this.viewports[i] = new Camera(
+            vec2.fromValues(0, 0),                                              // position of the viewport
+            40,                                                                 // width of viewport
+            [vSpawnX, 800 - viewportWidth, viewportWidth, viewportWidth]        // viewport (orgX, orgY, width, height)
+         );
+         this.vMessages[i] = new FontRenderable("Test Msg " + i);
+         c = hexToRgb("FCA311");
+         this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
+         this.vMessages[i].getXform().setPosition(0,0);
+         this.vMessages[i].setTextHeight(3);
+ 
+        vSpawnX += viewportWidth;
+        
+        
+    }
+    
     this.mHeroCam = new Camera(
         vec2.fromValues(50, 30),    // will be updated at each cycle to point to hero
         20,
@@ -66,19 +97,13 @@ MyGame.prototype.initialize = function () {
         2                           // viewport bounds
     );
     this.mHeroCam.setBackgroundColor([0.85, 0.8, 0.8, 1]);
-    this.mBrainCam = new Camera(
-        vec2.fromValues(50, 30),    // will be updated at each cycle to point to the brain
-        10,
-        [0, 330, 150, 150],
-        2                           // viewport bounds
-    );
-    this.mBrainCam.setBackgroundColor([0.8, 0.8, 0.85, 1]);
-    this.mBrainCam.configInterpolation(0.7, 10);
+    
+    
     // Large background image
     var bgR = new SpriteRenderable(this.kBg);
     bgR.setElementPixelPositions(0, 1024, 0, 1024);
     bgR.getXform().setSize(150, 150);
-    bgR.getXform().setPosition(50, 35);
+    bgR.getXform().setPosition(0, 0);
     this.mBg = new GameObject(bgR);
 
     // Objects in the scene
@@ -116,7 +141,12 @@ MyGame.prototype.draw = function () {
     this.drawCamera(this.mCamera);
     this.mMsg.draw(this.mCamera);   // only draw status in the main camera
     this.drawCamera(this.mHeroCam);
-    this.drawCamera(this.mBrainCam);
+    //this.drawCamera(this.mBrainCam);
+    
+    for(var i = 0; i < this.viewports.length; i++){
+        this.drawCamera(this.viewports[i]);
+        this.vMessages[i].draw(this.viewports[i]);
+    }
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
@@ -127,7 +157,11 @@ MyGame.prototype.update = function () {
 
     this.mCamera.update();  // for smoother camera movements
     this.mHeroCam.update();
-    this.mBrainCam.update();
+    //this.mBrainCam.update();
+    
+    for(var i = 0; i < this.viewports.length; i++){
+        this.viewports[i].update();
+    }
 
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
@@ -192,7 +226,7 @@ MyGame.prototype.update = function () {
 
     // set the hero and brain cams    
     this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
-    this.mBrainCam.panTo(this.mBrain.getXform().getXPos(), this.mBrain.getXform().getYPos());
+    //this.mBrainCam.panTo(this.mBrain.getXform().getXPos(), this.mBrain.getXform().getYPos());
 
     msg = "";
     // testing the mouse input

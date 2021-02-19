@@ -1,13 +1,14 @@
-
+canvas {
+	border: 3px solid #E5E5E5;
+	position: center;
+}
 body{
 	background-color: #14213D;
-	
+	width: auto;
 }
 
 h1{
-	position: relative; 
-	width:940px; 
-	height:20px; 
+	position: relative;
 	background-color: #14213D;
 	text-align: center;
 	font: italic small-caps bold 18px Georgia, serif;
@@ -31,8 +32,8 @@ p.c{
 div.controls {
 	position: relative; 
 	background-color: #E5E5E5;
-    width:940px; 
-    font: italic small-caps bold 18px Georgia, serif;
+    font: italic small-caps bold 22px Georgia, serif;
+	
    }
    * {
       box-sizing: border-box;
@@ -42,7 +43,7 @@ div.controls {
       width: 33%;
       color: white;
       padding: 10px;
-      height: 500px;
+      height: 100%;
       text-align: center;
    }
    .left {
