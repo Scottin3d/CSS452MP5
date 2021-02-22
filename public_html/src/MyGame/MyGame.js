@@ -126,7 +126,7 @@ MyGame.prototype.initialize = function () {
          c = hexToRgb("14213d");
          this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
          this.vMessages[i].getXform().setPosition(-10,1);
-         this.vMessages[i].setTextHeight(5);
+         this.vMessages[i].setTextHeight(3);
          
          /* viewport message background
           * 
@@ -174,9 +174,9 @@ MyGame.prototype.drawCamera = function (camera) {
     this.mBg.draw(camera);
     this.mHero.draw(camera);
     this.mBrain.draw(camera);
-    this.mPortal.draw(camera);
-    this.mLMinion.draw(camera);
-    this.mRMinion.draw(camera);
+    //this.mPortal.draw(camera);
+    //this.mLMinion.draw(camera);
+    //this.mRMinion.draw(camera);
 };
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
@@ -206,9 +206,8 @@ MyGame.prototype.draw = function () {
 // anything from this function!
 MyGame.prototype.update = function () {
     var zoomDelta = 0.05;
-    var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
-
-    
+    //var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
+    var msg = "";
     this.mCamera.update(); 
     for(var i = 0; i < this.viewports.length; i++){
         this.viewports[i].update();
@@ -216,7 +215,6 @@ MyGame.prototype.update = function () {
     
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
-
     this.mHero.update();     // for WASD movement
     
     this.mPortal.update(     // for arrow movement
@@ -226,10 +224,31 @@ MyGame.prototype.update = function () {
         gEngine.Input.keys.Right
     );
     // Brain chasing the hero
+    
     var h = [];
+    /*
     if (!this.mHero.pixelTouches(this.mBrain, h)) {
         this.mBrain.rotateObjPointTo(this.mHero.getXform().getPosition(), 0.01);
         GameObject.prototype.update.call(this.mBrain);
+    }
+    */
+    this.mCamera.isMouseInViewport();
+    
+    var heroPos = this.mHero.getXform().getPosition();
+    var a = heroPos[0] - this.mCamera.mouseWCX();
+    var b = heroPos[1] - this.mCamera.mouseWCY();
+    //msg += "hero: x" + heroPos[0].toFixed(2) + ", y" + heroPos.toFixed(2) + "  ";
+    var heroMag = Math.sqrt(a*a + b*b);
+    
+    msg += "Hero mag: " + heroMag;
+    
+    this.vMessages[1].setText(msg);
+    
+    if (heroMag > 6) {
+        this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(), 
+                                                    this.mCamera.mouseWCY()), 0.1);
+        this.mHero.setSpeed(0.75);                                            
+        GameObject.prototype.update.call(this.mHero);
     }
 
     /* Legacy code
