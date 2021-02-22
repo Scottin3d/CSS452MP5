@@ -58,7 +58,8 @@ MyGame.prototype.unloadScene = function () {
     gEngine.Textures.unloadTexture(this.space);
 };
 
-MyGame.prototype.initialize = function () {
+MyGame.prototype.initialize = function () { 
+    
     // color variable
     // I wrote the hexToRgb utility to help with better colors -- Scott
     var c; 
@@ -294,6 +295,10 @@ MyGame.prototype.update = function () {
             this.mPortal.getXform().setXPos(this.mCamera.mouseWCX());
             this.mPortal.getXform().setYPos(this.mCamera.mouseWCY());
         }
+        
+        if(this.vCanvas[1].isMouseInViewport()){
+            msg += "    Button Click!         ";
+        }
     }
 
     if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Middle)) {
@@ -312,4 +317,6 @@ MyGame.prototype.update = function () {
 
     msg += " X=" + gEngine.Input.getMousePosX() + " Y=" + gEngine.Input.getMousePosY();
     this.vMessages[4].setText(msg);
+    
+    
 };
