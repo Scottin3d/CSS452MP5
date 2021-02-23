@@ -26,7 +26,7 @@ function MyGame() {
     this.vMessages = null;
     this.vMsgBg = null;
     
-    
+    //this.viewports = null;
     this.tv = null;
     this.vBackground = null;
 
@@ -201,9 +201,9 @@ MyGame.prototype.update = function () {
     var msg = "";
 
     this.mCamera.update(); 
-    for(var i = 0; i < this.viewports.length; i++){
-        this.viewports[i].update();
-    }
+//    for(var i = 0; i < this.viewports.length; i++){
+//        this.viewports[i].update();
+//    }
     this.mPatrol.update();
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
