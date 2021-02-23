@@ -56,13 +56,17 @@ function Viewports(numV, vWidth, color) {
 };
 
 Viewports.prototype.update = function(){
+    // update viewports and message boards
     for (var i = 0; i < this.viewports.length; i++) {
-        this.viewports[i].update();
+        this.viewports[i].update();                                             // update the camera
         var camPos = this.viewports[i].getWCCenter();
         var camW = this.viewports[i].getWCWidth() / 2;
         var bgS = this.vMsgBg[i].getXform().getHeight() / 2;
-        this.vMsgBg[i].getXform().setPosition(camPos[0], camPos[1] - (camW - bgS));
-        this.vMessages[i].getXform().setPosition(camPos[0] - (camW * 0.75), camPos[1] - (camW - bgS));
+        
+        this.vMsgBg[i].getXform().setPosition(camPos[0],                        // these should scale with viewport size
+                                              camPos[1] - (camW - bgS));        // the banner will always be 10% the height
+        this.vMessages[i].getXform().setPosition(camPos[0] - (camW * 0.75), 
+                                                 camPos[1] - (camW - bgS));
         
         if(!this.activeViewports[i]){
              this.vMessages[i].setText("Viewport Deactivated");
@@ -71,7 +75,9 @@ Viewports.prototype.update = function(){
             this.vMessages[i].setText("Viewport activated");
         }
     }
+    //**************************************************************************
     
+    // viewport toggles
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.One)){
         this.activeViewports[0] = !this.activeViewports[0];
     }
@@ -84,7 +90,7 @@ Viewports.prototype.update = function(){
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Four)){
         this.activeViewports[3] = !this.activeViewports[3];
     }
-    
+    //**************************************************************************
 };
 
 
@@ -112,14 +118,13 @@ Viewports.prototype.isViewportActive = function (i){
     return this.activeViewports[i];
 };
 
-Viewports.prototype.getNextAvailableViewport = function (){
-    for (var i = 1; i < this.activeViewports.length; i++) {
+Viewports.prototype.getNextAvailableViewport = function (){                     // make sure to use === when calling
+    for (var i = 1; i < this.activeViewports.length; i++) {                     // === does a type check
         if(!this.activeViewports.length){
             return i;
         }
     }
-    // no free? return first (middle left)
-    return 1;
+    return null;                                                                // no free? return null
 };
 
 
