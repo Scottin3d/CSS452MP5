@@ -26,9 +26,7 @@ function MyGame() {
     this.cButton = null;
     this.vMsgBg = null;
     
-    // viewports
-    this.viewports = null;
-    this.vBackground = null;
+    this.UI = null;
 
     // the hero and the support objects
     this.mHero = null;
@@ -76,6 +74,8 @@ MyGame.prototype.initialize = function () {
     this.vBackground.getXform().setPosition(10, 10);
     this.vBackground.getXform().setSize(10, 10);
 
+    this.UI = new UIcanvas();
+    
     // main camera
     this.mCamera = new Camera(
         vec2.fromValues(0, 0),                                                  // position of the camera
@@ -97,6 +97,9 @@ MyGame.prototype.initialize = function () {
     this.cButton.setColor([1,1,1,1]);
     this.cButton.getXform().setPosition(20, 60);
     this.cButton.getXform().setSize(50, 20);
+    
+    this.UI.AddElement(this.cButton);
+    //this.UI.AddButton();
     
     // Large background image
     var bgR = new SpriteRenderable(this.space);
@@ -140,9 +143,12 @@ MyGame.prototype.draw = function () {
     this.drawCamera(this.mCamera);
     //this.drawCamera(this.vCanvas);
     
+    this.UI.draw();
+    /*
     this.vCanvas.setupCanvas();
     //this.vCanvas.setupViewProjection();
     this.cButton.draw(this.vCanvas);
+    */
     this.mMsg[0].draw(this.vCanvas);
     this.mMsg[1].draw(this.vCanvas);
     this.mMsg[2].draw(this.vCanvas);
@@ -152,20 +158,14 @@ MyGame.prototype.draw = function () {
 // The Update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
 MyGame.prototype.update = function () {
+    this.UI.update();
+    
+    
+    
+    
     var zoomDelta = 0.05;
+    //this.mCamera.update();
     
-    this.mCamera.update();
-    
-    this.mLMinion.update();  // for sprite animation
-    this.mRMinion.update();
-    this.mHero.update();     // for WASD movement
-    
-    this.mPortal.update(     // for arrow movement
-        gEngine.Input.keys.Up,
-        gEngine.Input.keys.Down,
-        gEngine.Input.keys.Left,
-        gEngine.Input.keys.Right
-    );
     // Brain chasing the hero
     
     var h = [];
@@ -203,6 +203,7 @@ MyGame.prototype.update = function () {
          *      element[1].Invoke();
          * }
          **/
+        /*
         var buttonPos = this.cButton.getXform().getPosition(); 
         var buttonH = this.cButton.getXform().getHeight();
         var buttonW = this.cButton.getXform().getWidth();
@@ -214,7 +215,12 @@ MyGame.prototype.update = function () {
             
            this.mMsg[0].setText("Click!");
         }
-        
+        */
+       var mouse = [this.mCamera.mouseWCX(), this.mCamera.mouseWCY()];
+       var element = this.UI.IsMouseOverElement(mouse);
+       if(element[0]){
+          this.UI.TestClick();
+       }
         
         
     }
@@ -265,19 +271,10 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
         this.mCamera.shake(-2, -2, 20, 30);
     }
-
-    // set the hero and brain cams    
-    //this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
-    // set v[0] to hero
-    //this.viewports[0].panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos()); // viewport (orgX, orgY, width, height)
-    //var vp = this.viewports[0].
-    var heroPos = this.mHero.getXform().getPosition();
+    
 
     // testing the mouse input
     if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left)) {
-        if (this.vCanvas.isMouseInViewport()) {
-        }
-        
         
     }
 
@@ -285,11 +282,9 @@ MyGame.prototype.update = function () {
        
     }
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Right)) {
-        this.mPortal.setVisibility(false);
     }
 
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Middle)) {
-        this.mPortal.setVisibility(true);
     }
     
     

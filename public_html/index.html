@@ -58,6 +58,7 @@
         <script type="text/javascript" src="src/Engine/Cameras/CameraShake.js"></script>
         
         <!-- Client game code -->
+        <script type="text/javascript" src="src/MyGame/Objects/UIcanvas.js"></script>
         <script type="text/javascript" src="src/MyGame/MyGame.js"></script>
         <!-- Objects -->
         <script type="text/javascript" src="src/MyGame/Objects/DyePack.js"></script>
@@ -65,12 +66,17 @@
         <script type="text/javascript" src="src/MyGame/Objects/Brain.js"></script>
         <script type="text/javascript" src="src/MyGame/Objects/Minion.js"></script>
         <script type="text/javascript" src="src/MyGame/Objects/TextureObject.js"></script>
+        <script type="text/javascript" src="src/MyGame/Objects/UIelement.js"></script>
+        
+        
+        <!-- comment -->
+
     </head>
 
     <body onload="
         var myGame = new MyGame();
         gEngine.Core.initializeEngineCore('GLCanvas', myGame);as">
-        <canvas id="GLCanvas" width="940" height="850">
+        <canvas id="GLCanvas" width="940" height="640">
             <!-- GLCanvas is the area we will draw in: a 640x480 area. -->
             Your browser does not support the HTML5 canvas.
             <!-- this message will show only if WebGL clearing failed -->
