@@ -106,7 +106,9 @@ Viewports.prototype.setViewportWidth = function(i, width){
 };
 
 Viewports.prototype.setViewportWC = function(i, newWC){
-    this.viewports[i].setWCCenter(newWC[0], newWC[1]);
+    var vp = this.viewports[i];
+    vp.setWCCenter(newWC[0], newWC[1]);
+    //this.viewports[i](newWC[0], newWC[1]);
     
 };
 
@@ -120,11 +122,12 @@ Viewports.prototype.isViewportActive = function (i){
 
 Viewports.prototype.getNextAvailableViewport = function (){                     // make sure to use === when calling
     for (var i = 1; i < this.activeViewports.length; i++) {                     // === does a type check
-        if(!this.activeViewports.length){
+        if(!this.activeViewports[i]){
+            this.toggleViewport(i, true);
             return i;
         }
     }
-    return null;                                                                // no free? return null
+    return -1;                                                                // no free? return null
 };
 
 

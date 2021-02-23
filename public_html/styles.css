@@ -6,6 +6,7 @@ canvas {
 body{
 	background-color: #14213d;
 	width: auto;
+        height: auto;
 }
 
 h1{
@@ -38,40 +39,40 @@ div.controls {
 	position: relative; 
 	width: 940px;
 	background-color: #E5E5E5;
-    font: italicbold 14px Georgia, serif;
-	height: 250px;
+        font: italicbold 14px Georgia, serif;
+	
 }
   * {
-      box-sizing: border-box;
-	  height: auto;
+        box-sizing: border-box;
+	height: auto;
    } 
    .left, .right, .center, .right2 {
-	  border: 3px solid #E5E5E5;
-      float: left;
-      width: 25%;
-	  color: #E5E5E5;
-      height: 100%;
-      text-align: center;
+        border: 3px solid #E5E5E5;
+        float: left;
+        width: 25%;
+        color: #E5E5E5;
+        height: 100%;
+        text-align: center;
    }
    .left {
-	  padding: 10px;
-      background-color: #313238;
+       padding: 10px;
+       background-color: #313238;
    }
    .center {
-	  padding: 10px;
-	  color: #313238;
-	  border-color: #313238;
-      background-color: #E5E5E5;
+	padding: 10px;
+	color: #313238;
+	border-color: #313238;
+        background-color: #E5E5E5;
    }
    .right {
-	  padding: 10px;
-      background-color: #313238;
+	padding: 10px;
+        background-color: #313238;
    }
    .right2{
-		padding: 10px;
-		color: #313238;
-		border-color: #313238;
-		background-color: #E5E5E5;
+        padding: 10px;
+	color: #313238;
+        border-color: #313238;
+        background-color: #E5E5E5;
    }
    .container:after {
       

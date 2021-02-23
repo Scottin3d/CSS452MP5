@@ -117,9 +117,9 @@ MyGame.prototype.initialize = function () {
     
     // dye pack reference
     this.dyePacksInScene = [];
-    this.testPack = new Renderable(gEngine.DefaultResources.getConstColorShader());
-    c = hexToRgb("e5e5e5");
-    this.testPack.setColor([c.r, c.g, c.b, c.a]);
+    this.testPack = new DyePack(this.kMinionPortal);
+    //c = hexToRgb("e5e5e5");
+    //this.testPack.setColor([c.r, c.g, c.b, c.a]);
     this.testPack.getXform().setSize(2, 3.5);
 };
 
@@ -131,7 +131,7 @@ MyGame.prototype.drawCamera = function (camera) {
     
 
     if(this.dyePacksInScene){
-        for (var i = 1; i < this.dyePacksInScene.length; i++) {
+        for (var i = 0; i < this.dyePacksInScene.length; i++) {
             var pack = this.dyePacksInScene[i];
             pack.draw(camera);
         }
@@ -169,6 +169,11 @@ MyGame.prototype.update = function () {
     // update cameras
     this.mViewports.update();
     this.mCamera.update(); 
+    
+    // update dye packs
+    for (var i = 0; i < this.dyePacksInScene.length; i++) {
+        this.dyePacksInScene[i].update();
+    }
     //**************************************************************************
     // variables
     var heroPos = this.mHero.getXform().getPosition();
@@ -248,10 +253,7 @@ MyGame.prototype.update = function () {
     //var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
     var msg = "";
 
-    this.mCamera.update(); 
-//    for(var i = 0; i < this.viewports.length; i++){
-//        this.viewports[i].update();
-//    }
+    
     this.mPatrol.update();
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
@@ -333,14 +335,13 @@ MyGame.prototype.update = function () {
 };
 
 MyGame.prototype.SpawnDyePack = function(spawnPos){
-    if(this.dyePacksInScene == null){
-        this.dyePacksInScene = new Array(1);
-    }
-    var packClone = new Renderable(gEngine.DefaultResources.getConstColorShader());
-    packClone.setColor(this.testPack.getColor());
+    
+    var packClone = new DyePack(this.kMinionPortal);
     packClone.getXform().setPosition(spawnPos[0], spawnPos[1]);
-    packClone.getXform().setSize(this.testPack.getXform().getWidth(),
-                                 this.testPack.getXform().getHeight());
+    packClone.getXform().setSize(20, 10);
     this.dyePacksInScene.push(packClone);  
     
+    var i = this.mViewports.getNextAvailableViewport();
+    this.mViewports.toggleViewport(i, true);
+    this.mViewports.setViewportWC(i, spawnPos);
 };
