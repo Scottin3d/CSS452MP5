@@ -152,6 +152,59 @@ Camera.prototype.setupViewProjection = function () {
     //</editor-fold>
 };
 
+// Initializes the camera to begin drawing
+Camera.prototype.setupCanvas = function () {
+    var gl = gEngine.Core.getGL();
+    //<editor-fold desc="Step A: Set up and clear the Viewport">
+    // Step A1: Set up the viewport: area on canvas to be drawn
+    gl.viewport(this.mViewport[0],  // x position of bottom-left corner of the area to be drawn
+                this.mViewport[1],  // y position of bottom-left corner of the area to be drawn
+                this.mViewport[2],  // width of the area to be drawn
+                this.mViewport[3]); // height of the area to be drawn
+    // Step A2: set up the corresponding scissor area to limit the clear area
+    gl.scissor(this.mScissorBound[0], // x position of bottom-left corner of the area to be drawn
+               this.mScissorBound[1], // y position of bottom-left corner of the area to be drawn
+               this.mScissorBound[2], // width of the area to be drawn
+               this.mScissorBound[3]);// height of the area to be drawn
+    // Step A3: set the color to be clear
+    //gl.clearColor(this.mBgColor[0], this.mBgColor[1], this.mBgColor[2], this.mBgColor[3]);  // set the color to be cleared
+    // Step A4: enable the scissor area, clear, and then disable the scissor area
+    //gl.enable(gl.SCISSOR_TEST);
+    ///gl.clear(gl.COLOR_BUFFER_BIT);
+    //gl.disable(gl.SCISSOR_TEST);
+    //</editor-fold>
+
+    //<editor-fold desc="Step  B: Set up the View-Projection transform operator"> 
+    // Step B1: define the view matrix
+    var center = [];
+    if (this.mCameraShake !== null) {
+        center = this.mCameraShake.getCenter();
+    } else {
+        center = this.getWCCenter();
+    }
+
+    mat4.lookAt(this.mViewMatrix,
+        [center[0], center[1], 10],   // WC center
+        [center[0], center[1], 0],    // 
+        [0, 1, 0]);     // orientation
+
+    // Step B2: define the projection matrix
+    var halfWCWidth = 0.5 * this.getWCWidth();
+    var halfWCHeight = 0.5 * this.getWCHeight(); // 
+    mat4.ortho(this.mProjMatrix,
+        -halfWCWidth,   // distance to left of WC
+         halfWCWidth,   // distance to right of WC
+        -halfWCHeight,  // distance to bottom of WC
+         halfWCHeight,  // distance to top of WC
+         this.mNearPlane,   // z-distance to near plane 
+         this.mFarPlane  // z-distance to far plane 
+        );
+
+    // Step B3: concatenate view and project matrices
+    mat4.multiply(this.mVPMatrix, this.mProjMatrix, this.mViewMatrix);
+    //</editor-fold>
+};
+
 Camera.prototype.collideWCBound = function (aXform, zone) {
     var bbox = new BoundingBox(aXform.getPosition(), aXform.getWidth(), aXform.getHeight());
     var w = zone * this.getWCWidth();
