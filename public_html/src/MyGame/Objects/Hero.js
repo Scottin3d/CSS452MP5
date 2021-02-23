@@ -14,13 +14,14 @@
 function Hero(spriteTexture) {
     this.kDelta = 0.3;
 
-    this.mDye = new SpriteRenderable(spriteTexture);
-    this.mDye.setColor([1, 1, 1, 0]);
-    this.mDye.getXform().setPosition(35, 50);
-    this.mDye.getXform().setSize(9, 12);
-    this.mDye.setElementPixelPositions(0, 120, 0, 180);
-    GameObject.call(this, this.mDye);
+    this.mSrite = new SpriteRenderable(spriteTexture);
+    this.mSrite.setColor([1, 1, 1, 0]);
+    this.mSrite.getXform().setPosition(35, 50);
+    this.mSrite.getXform().setSize(9, 12);
+    this.mSrite.setElementPixelPositions(0, 120, 0, 180);
+    GameObject.call(this, this.mSrite);
 }
+
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
@@ -39,4 +40,18 @@ Hero.prototype.update = function () {
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
         xform.incXPosBy(this.kDelta);
     }
+};
+
+Hero.prototype.checkBounds = function(camera){
+    var heroPos = this.getXform().getPosition();
+    var camC = camera.getWCCenter();
+    var camW = camera.getWCWidth() / 2;
+    var camH = camera.getWCHeight() / 2;
+    
+    if(heroPos[1] <= (camC[1] + camH) && heroPos >= (camC[1] - camH) &&
+       heroPos[0] >= (camC[0] - camW) && heroPos <= (camC[0] + camW)){
+        return true;
+    }
+    
+    return false;
 };

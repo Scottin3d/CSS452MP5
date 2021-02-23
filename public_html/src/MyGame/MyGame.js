@@ -21,14 +21,13 @@ function MyGame() {
     this.mCamera = null;
     this.mBg = null;
 
-    //this.mMsg = null;
-    this.vCanvas = null;
+    this.mViewports = null;
+    // main camera message board
     this.vMessages = null;
-    this.vMsgBg = null;
-    
-    
-    this.tv = null;
     this.vBackground = null;
+    
+    this.testPack = null;
+    this.dyePacksInScene = null;
 
     // the hero and the support objects
     this.mHero = null;
@@ -96,16 +95,11 @@ MyGame.prototype.initialize = function () {
     
     // create viewports
     // number, width, bg color
-    this.tv = new Viewports(4, 6, c);
+    this.mViewports = new Viewports(4, 6, c);
     
     // from spec 
     // vp[0] is width 15
-    this.tv.setViewportWidth(0, 15);
-    
-    
-    // BG
-    this.vMsgBg = new Renderable(gEngine.DefaultResources.getConstColorShader());
-    
+    this.mViewports.setViewportWidth(0, 15);
    
     // Large background image
     var bgR = new SpriteRenderable(this.space);
@@ -113,6 +107,12 @@ MyGame.prototype.initialize = function () {
     bgR.getXform().setSize(250, 250);
     bgR.getXform().setPosition(0, 0);
     this.mBg = new GameObject(bgR);
+    
+    // dye pack reference
+    this.testPack = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    c = hexToRgb("e5e5e5");
+    this.testPack.setColor([c.r, c.g, c.b, c.a]);
+    this.testPack.getXform().setSize(2, 3.5);
 };
 
 
@@ -121,6 +121,13 @@ MyGame.prototype.drawCamera = function (camera) {
     this.mBg.draw(camera);
     this.mHero.draw(camera);
     this.mBrain.draw(camera);
+    
+    if(this.dyePacksInScene){
+        for (var i = 1; i < this.dyePacksInScene.length; i++) {
+            var pack = this.dyePacksInScene[i];
+            pack.draw(camera);
+        }
+    }
     
 };
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -138,13 +145,13 @@ MyGame.prototype.draw = function () {
     this.vMessages.draw(this.mCamera);
     // draw viewports
     for (var i = 0; i < 4; i++) {
-        var cam = this.tv.getCamera(i);
+        var cam = this.mViewports.getCamera(i);
         if(cam !== null){
             this.drawCamera(cam);
         }else{
-            this.tv.setupCamera(i);
+            this.mViewports.setupCamera(i);
         }
-        this.tv.draw(i);
+        this.mViewports.draw(i);
     }
 };
 
@@ -152,7 +159,7 @@ MyGame.prototype.draw = function () {
 // anything from this function!
 MyGame.prototype.update = function () {
     // update cameras
-    this.tv.update();
+    this.mViewports.update();
     this.mCamera.update(); 
     //**************************************************************************
     
@@ -170,23 +177,31 @@ MyGame.prototype.update = function () {
         var heroMag = Math.sqrt(a*a + b*b);
         var vmsg = "Hero mag: " + heroMag.toFixed(2);
 
-        if(this.tv.isViewportActive(0)){                                        // checks if the viewport is active
-            this.tv.setViewportText(0, vmsg);                                   // if so, sets text to mag (hero, mouse)
+        if(this.mViewports.isViewportActive(0)){                                        // checks if the viewport is active
+            this.mViewports.setViewportText(0, vmsg);                                   // if so, sets text to mag (hero, mouse)
         }
 
-        if (heroMag > 6) {                                                      // 6 is arbitrary, it is the threshold to 
+        var heroInBounds = this.mHero.checkBounds(this.mCamera);
+        if(heroInBounds){
+            if (heroMag > 6) {                                                      // 6 is arbitrary, it is the threshold to 
             this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(),// stop moving the hero
-                                        this.mCamera.mouseWCY()), 0.1);
+                                        this.mCamera.mouseWCY()), 0.05);
             this.mHero.setSpeed(0.1);                                           // speed is arbitrary
             GameObject.prototype.update.call(this.mHero);
+            var heroPos = this.mHero.getXform().getPosition();          
+            this.mViewports.setViewportWC(0, heroPos); 
         }
 
-        var heroPos = this.mHero.getXform().getPosition();          
-        this.tv.setViewportWC(0, heroPos);                                      // update viewport[0] to hero center
+         
+        }
+                                            // update viewport[0] to hero center
     }
     //**************************************************************************
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
+        var spawnPos = this.mHero.getXform().getPosition();
+        this.SpawnDyePack(spawnPos); 
+    }
     
-
     /* Legacy code
      * TODO
      * - go throguh and see if we can salvage anything
@@ -277,4 +292,17 @@ MyGame.prototype.update = function () {
     
     // bottom local
     //this.vMessages[4].setText(msg);
+};
+
+MyGame.prototype.SpawnDyePack = function(spawnPos){
+    if(this.dyePacksInScene == null){
+        this.dyePacksInScene = new Array(1);
+    }
+    var packClone = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    packClone.setColor(this.testPack.getColor());
+    packClone.getXform().setPosition(spawnPos[0], spawnPos[1]);
+    packClone.getXform().setSize(this.testPack.getXform().getWidth(),
+                                 this.testPack.getXform().getHeight());
+    this.dyePacksInScene.push(packClone);  
+    
 };
