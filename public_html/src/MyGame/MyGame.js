@@ -26,10 +26,8 @@ function MyGame() {
     this.vMessages = null;
     this.vMsgBg = null;
     
-    this.testCam = null;
     
-    // viewports
-    this.viewports = null;
+    this.tv = null;
     this.vBackground = null;
 
     // the hero and the support objects
@@ -72,11 +70,7 @@ MyGame.prototype.initialize = function () {
     this.mRMinion = new Minion(this.kMinionSprite, 70, 30);
     this.mFocusObj = this.mHero;
     
-    this.vBackground = new Renderable(gEngine.DefaultResources.getConstColorShader());
-    c = hexToRgb("14213d");
-    this.vBackground.setColor([c.r, c.g, c.b, c.a]);
-    this.vBackground.getXform().setPosition(10, 10);
-    this.vBackground.getXform().setSize(10, 10);
+    
 
     // main camera
     this.mCamera = new Camera(
@@ -86,86 +80,33 @@ MyGame.prototype.initialize = function () {
     );
     c = hexToRgb("14213d");
     this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
-            
-    this.testCam = new Camera(
-        vec2.fromValues(0, 0),                                                  // position of the camera
-        250,                                                                    // width of camera
-        [0, 0, 250, 250]                                                        // viewport (orgX, orgY, width, height)
-    );
-    c = hexToRgb("ffffff");
-    this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
-    this.viewports = new Array(4);
-    this.vCanvas = new Array(5);
-    this.vMessages = new Array(5);  
-    this.vMsgBg = new Array(5);
-    // vars
-    var viewportPadding = 10;
-    var vSpawnX = 0;
-    for(var i = 0; i < 4; i++){
-        // view ports
-        /* TODO -- Scott
-         * - add background renderable for boarded
-         * viewports[0] - Hero centered
-         * viewports[1] -
-         * viewports[2] -
-         * viewports[3] - 
-         */
-        var viewportWidth = ((940 - (viewportPadding * (4 + 1))) / 4);
-        vSpawnX += viewportPadding;
-        this.viewports[i] = new Camera(
-            vec2.fromValues(0, 0),                                              // position of the viewport
-            50,                                                                 // width of viewport
-            [vSpawnX, 840 - viewportWidth, viewportWidth, viewportWidth]        // viewport (orgX, orgY, width, height)
-         );
-         // viewport canvas (camera on top)
-         this.vCanvas[i] = new Camera(
-            vec2.fromValues(0, 0),                                                  // position of the camera
-            50,                                                                   // width of camera
-            [vSpawnX, 840 - viewportWidth, viewportWidth, 30]
-        );
-        this.vCanvas[i].setBackgroundColor([c.r, c.g, c.b, c.a]);
-         // view port message
-         /* This is extra
-          * TODO
-          */
-         this.vMessages[i] = new FontRenderable("Test Msg " + i);
-         c = hexToRgb("14213d");
-         this.vMessages[i].setColor([c.r, c.g, c.b, c.a]);
-         this.vMessages[i].getXform().setPosition(-10,1);
-         this.vMessages[i].setTextHeight(3);
-         
-         /* viewport message background
-          * 
-          */
-        this.vMsgBg[i] = new Renderable(gEngine.DefaultResources.getConstColorShader());
-        c = hexToRgb("e5e5e5");
-        this.vMsgBg[i].setColor([c.r, c.g, c.b, c.a]);
-        this.vMsgBg[i].getXform().setPosition(-10,-22);
-        this.vMsgBg[i].getXform().setSize(viewportWidth, 6);
        
-        // increment viewport spacing
-        vSpawnX += viewportWidth;
-    }
-    // from spec 
-    this.viewports[0].setWCWidth(15);
-    
-    // mouse pos/ main window canvas
-    this.vCanvas[4] = new Camera(
-            vec2.fromValues(0, 0),                                                  // position of the camera
-            250,                                                                   // width of camera
-            [0, 0, 940, 30]
-        );
+    // main camera message board
+    this.vBackground = new Renderable(gEngine.DefaultResources.getConstColorShader());
     c = hexToRgb("e5e5e5");
-    this.vCanvas[4].setBackgroundColor([c.r, c.g, c.b, c.a]);
-    // in message and background [4]
-    this.vMessages[4] = new FontRenderable("Mosue Position");
+    this.vBackground.setColor([c.r, c.g, c.b, c.a]);
+    //this.vBackground.getXform().setPosition(0, this.mCamera.getWCCenter() - ( this.mCamera.getWCHeight() / 2));
+    this.vBackground.getXform().setSize(this.mCamera.getWCWidth(), 10);
+    // main camera message
+    this.vMessages = new FontRenderable("Mouse Position");
     c = hexToRgb("14213d");
-    this.vMessages[4].setColor([c.r, c.g, c.b, c.a]);
-    this.vMessages[4].getXform().setPosition(-25,0);
-    this.vMessages[4].setTextHeight(5);
-    // BG
-    this.vMsgBg[4] = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    this.vMessages.setColor([c.r, c.g, c.b, c.a]);
+    //this.vMessages.getXform().setPosition(-25,0);
+    this.vMessages.setTextHeight(5);
     
+    // create viewports
+    // number, width, bg color
+    this.tv = new Viewports(4, 6, c);
+    
+    // from spec 
+    // vp[0] is width 15
+    this.tv.setViewportWidth(0, 15);
+    
+    
+    // BG
+    this.vMsgBg = new Renderable(gEngine.DefaultResources.getConstColorShader());
+    
+   
     // Large background image
     var bgR = new SpriteRenderable(this.space);
     bgR.setElementPixelPositions(0, 1024, 0, 1024);
@@ -180,48 +121,81 @@ MyGame.prototype.drawCamera = function (camera) {
     this.mBg.draw(camera);
     this.mHero.draw(camera);
     this.mBrain.draw(camera);
-    //this.mPortal.draw(camera);
-    //this.mLMinion.draw(camera);
-    //this.mRMinion.draw(camera);
+    
 };
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
 MyGame.prototype.draw = function () {
     //**Canvas / UI elements must be drawn last**
-    var c = hexToRgb("14213d");
+    var c = hexToRgb("ffffff");
     gEngine.Core.clearCanvas([c.r, c.g, c.b, c.a]);
     
+    
+    
+    // draw main camera
     this.drawCamera(this.mCamera);
-    //this.mMsg.draw(this.mCamera);       
-    // only draw status in the main camera
-    
-    this.drawCamera(this.testCam);
-    // viewports
-    for(var i = 0; i < this.viewports.length; i++){
-        this.drawCamera(this.viewports[i]);
-    }
-    
-    //**Canvas / UI elements must be drawn last**
-    for(var i = 0; i < this.vCanvas.length; i++){
-        this.vCanvas[i].setupViewProjection();
-        this.vMsgBg[i].draw(this.vCanvas[i]);
-        this.vMessages[i].draw(this.vCanvas[i]);
+    this.vBackground.draw(this.mCamera);
+    this.vMessages.draw(this.mCamera);
+    // draw viewports
+    for (var i = 0; i < 4; i++) {
+        var cam = this.tv.getCamera(i);
+        if(cam !== null){
+            this.drawCamera(cam);
+        }else{
+            this.tv.setupCamera(i);
+        }
+        this.tv.draw(i);
     }
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
 MyGame.prototype.update = function () {
+    // update cameras
+    this.tv.update();
+    this.mCamera.update(); 
+    //**************************************************************************
+    
+    // update main camera message board
+    var camPos = this.mCamera.getWCCenter();                                    // to make the board always at the bottom of the 
+    this.vBackground.getXform().setPosition(camPos[0], camPos[1] - 82);         // camera, its position needs to update every frame
+    this.vMessages.getXform().setPosition(camPos[0] - 50, camPos[1] - 80);      // the camera does
+    //**************************************************************************
+    
+    // update mHero
+    if(this.mCamera.isMouseInViewport()){                                       // only if the mouse is over the main camera
+        var heroPos = this.mHero.getXform().getPosition();
+        var a = heroPos[0] - this.mCamera.mouseWCX();
+        var b = heroPos[1] - this.mCamera.mouseWCY();
+        var heroMag = Math.sqrt(a*a + b*b);
+        var vmsg = "Hero mag: " + heroMag.toFixed(2);
+
+        if(this.tv.isViewportActive(0)){                                        // checks if the viewport is active
+            this.tv.setViewportText(0, vmsg);                                   // if so, sets text to mag (hero, mouse)
+        }
+
+        if (heroMag > 6) {                                                      // 6 is arbitrary, it is the threshold to 
+            this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(),// stop moving the hero
+                                        this.mCamera.mouseWCY()), 0.1);
+            this.mHero.setSpeed(0.1);                                           // speed is arbitrary
+            GameObject.prototype.update.call(this.mHero);
+        }
+
+        var heroPos = this.mHero.getXform().getPosition();          
+        this.tv.setViewportWC(0, heroPos);                                      // update viewport[0] to hero center
+    }
+    //**************************************************************************
+    
+
+    /* Legacy code
+     * TODO
+     * - go throguh and see if we can salvage anything
+     */
+    
     var zoomDelta = 0.05;
     //var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
     var msg = "";
-    this.mCamera.update(); 
-    for(var i = 0; i < this.viewports.length; i++){
-        this.viewports[i].update();
-    }
     
-    this.mLMinion.update();  // for sprite animation
-    this.mRMinion.update();
     this.mHero.update();     // for WASD movement
     
     this.mPortal.update(     // for arrow movement
@@ -230,38 +204,6 @@ MyGame.prototype.update = function () {
         gEngine.Input.keys.Left,
         gEngine.Input.keys.Right
     );
-    // Brain chasing the hero
-    
-    var h = [];
-    /*
-    if (!this.mHero.pixelTouches(this.mBrain, h)) {
-        this.mBrain.rotateObjPointTo(this.mHero.getXform().getPosition(), 0.01);
-        GameObject.prototype.update.call(this.mBrain);
-    }
-    */
-    this.mCamera.isMouseInViewport();
-    
-    var heroPos = this.mHero.getXform().getPosition();
-    var a = heroPos[0] - this.mCamera.mouseWCX();
-    var b = heroPos[1] - this.mCamera.mouseWCY();
-    //msg += "hero: x" + heroPos[0].toFixed(2) + ", y" + heroPos.toFixed(2) + "  ";
-    var heroMag = Math.sqrt(a*a + b*b);
-    
-    msg += "Hero mag: " + heroMag;
-    
-    this.vMessages[1].setText(msg);
-    
-    if (heroMag > 6) {
-        this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(), 
-                                                    this.mCamera.mouseWCY()), 0.1);
-        this.mHero.setSpeed(0.1);                                            
-        GameObject.prototype.update.call(this.mHero);
-    }
-
-    /* Legacy code
-     * TODO
-     * - go throguh and see if we can salvage anything
-     */
     // Pan camera to object
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.L)) {
         this.mFocusObj = this.mLMinion;
@@ -304,15 +246,9 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
         this.mCamera.shake(-2, -2, 20, 30);
     }
-
-    // set the hero and brain cams    
-    //this.mHeroCam.panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos());
-    // set v[0] to hero
-    //this.viewports[0].panTo(this.mHero.getXform().getXPos(), this.mHero.getXform().getYPos()); // viewport (orgX, orgY, width, height)
-    //var vp = this.viewports[0].
-    var heroPos = this.mHero.getXform().getPosition();
-    this.viewports[0].setWCCenter(heroPos[0], heroPos[1]);
-
+    
+    
+    
     msg = "";
     // testing the mouse input
     if (gEngine.Input.isButtonPressed(gEngine.Input.mouseButton.Left)) {
@@ -320,10 +256,6 @@ MyGame.prototype.update = function () {
         if (this.mCamera.isMouseInViewport()) {
             this.mPortal.getXform().setXPos(this.mCamera.mouseWCX());
             this.mPortal.getXform().setYPos(this.mCamera.mouseWCY());
-        }
-        
-        if(this.vCanvas[1].isMouseInViewport()){
-            this.vMessages[1].setText("Button Click!");
         }
     }
 
@@ -343,6 +275,6 @@ MyGame.prototype.update = function () {
 
     msg += " X=" + gEngine.Input.getMousePosX() + " Y=" + gEngine.Input.getMousePosY();
     
-    
-    this.vMessages[4].setText(msg);
+    // bottom local
+    //this.vMessages[4].setText(msg);
 };
