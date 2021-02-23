@@ -5,7 +5,7 @@
 
 /*jslint node: true, vars: true */
 /*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2,
-  FontRenderable, SpriteRenderable, DyePack, Hero, Minion, Brain,
+  FontRenderable, SpriteRenderable, DyePack, Hero, Minion, Brain, Patrol,
   GameObject */
 /* find out more about jslint: http://www.jslint.com/help.html */
 
@@ -32,7 +32,7 @@ function MyGame() {
 
     // the hero and the support objects
     this.mHero = null;
-    this.mBrain = null;
+    this.mPatrol = null;
     this.mPortal = null;
     this.mLMinion = null;
     this.mRMinion = null;
@@ -62,7 +62,7 @@ MyGame.prototype.initialize = function () {
     // I wrote the hexToRgb utility to help with better colors -- Scott
     var c; 
     // objects
-    this.mBrain = new Brain(this.kMinionSprite);
+    this.mPatrol = new Patrol(this.kMinionSprite);
     this.mHero = new Hero(this.kMinionSprite);
     this.mPortal = new TextureObject(this.kMinionPortal, 50, 30, 10, 10);
     
@@ -120,8 +120,20 @@ MyGame.prototype.drawCamera = function (camera) {
     camera.setupViewProjection();
     this.mBg.draw(camera);
     this.mHero.draw(camera);
+<<<<<<< Updated upstream
     this.mBrain.draw(camera);
     
+=======
+<<<<<<< HEAD
+    this.mPatrol.draw(camera);
+    //this.mPortal.draw(camera);
+    //this.mLMinion.draw(camera);
+    //this.mRMinion.draw(camera);
+=======
+    this.mBrain.draw(camera);
+    
+>>>>>>> ecedec4beecacbca9de5ddf20f468433be768d03
+>>>>>>> Stashed changes
 };
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
@@ -195,7 +207,21 @@ MyGame.prototype.update = function () {
     var zoomDelta = 0.05;
     //var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
     var msg = "";
+<<<<<<< Updated upstream
     
+=======
+<<<<<<< HEAD
+    this.mCamera.update(); 
+    for(var i = 0; i < this.viewports.length; i++){
+        this.viewports[i].update();
+    }
+    this.mPatrol.update();
+    this.mLMinion.update();  // for sprite animation
+    this.mRMinion.update();
+=======
+    
+>>>>>>> ecedec4beecacbca9de5ddf20f468433be768d03
+>>>>>>> Stashed changes
     this.mHero.update();     // for WASD movement
     
     this.mPortal.update(     // for arrow movement
@@ -239,7 +265,7 @@ MyGame.prototype.update = function () {
     }
 
     // interaction with the WC bound
-    this.mCamera.clampAtBoundary(this.mBrain.getXform(), 0.9);
+    //this.mCamera.clampAtBoundary(this.mBrain.getXform(), 0.9);
     this.mCamera.clampAtBoundary(this.mPortal.getXform(), 0.8);
     this.mCamera.panWith(this.mHero.getXform(), 0.9);
 
