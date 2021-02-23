@@ -87,7 +87,13 @@ MyGame.prototype.initialize = function () {
     c = hexToRgb("14213d");
     this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
             
-    
+    this.testCam = new Camera(
+        vec2.fromValues(0, 0),                                                  // position of the camera
+        250,                                                                    // width of camera
+        [0, 0, 250, 250]                                                        // viewport (orgX, orgY, width, height)
+    );
+    c = hexToRgb("ffffff");
+    this.mCamera.setBackgroundColor([c.r, c.g, c.b, c.a]);
     this.viewports = new Array(4);
     this.vCanvas = new Array(5);
     this.vMessages = new Array(5);  
@@ -189,6 +195,7 @@ MyGame.prototype.draw = function () {
     //this.mMsg.draw(this.mCamera);       
     // only draw status in the main camera
     
+    this.drawCamera(this.testCam);
     // viewports
     for(var i = 0; i < this.viewports.length; i++){
         this.drawCamera(this.viewports[i]);
@@ -247,7 +254,7 @@ MyGame.prototype.update = function () {
     if (heroMag > 6) {
         this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(), 
                                                     this.mCamera.mouseWCY()), 0.1);
-        this.mHero.setSpeed(0.75);                                            
+        this.mHero.setSpeed(0.1);                                            
         GameObject.prototype.update.call(this.mHero);
     }
 
@@ -316,7 +323,7 @@ MyGame.prototype.update = function () {
         }
         
         if(this.vCanvas[1].isMouseInViewport()){
-            msg += "    Button Click!         ";
+            this.vMessages[1].setText("Button Click!");
         }
     }
 
@@ -335,7 +342,7 @@ MyGame.prototype.update = function () {
     }
 
     msg += " X=" + gEngine.Input.getMousePosX() + " Y=" + gEngine.Input.getMousePosY();
+    
+    
     this.vMessages[4].setText(msg);
-    
-    
 };
