@@ -23,12 +23,17 @@ function MyGame() {
 
     this.mViewports = null;
     // main camera message board
+    this.msgBrdSpd = 0.25;
+    this.msgOffset = 0;
+    this.lastMsgUpdate = 0;
     this.vMessages = null;
     this.vBackground = null;
     
+    this.autoSpawnPatrol = false;
     this.testPack = null;
     this.dyePacksInScene = null;
-
+    this.patrolUnitsInScene = null;
+    
     // the hero and the support objects
     this.mHero = null;
     this.mBrain = null;
@@ -92,7 +97,6 @@ MyGame.prototype.initialize = function () {
     this.vMessages.setColor([c.r, c.g, c.b, c.a]);
     //this.vMessages.getXform().setPosition(-25,0);
     this.vMessages.setTextHeight(5);
-    
     // create viewports
     // number, width, bg color
     this.mViewports = new Viewports(4, 6, c);
@@ -108,7 +112,10 @@ MyGame.prototype.initialize = function () {
     bgR.getXform().setPosition(0, 0);
     this.mBg = new GameObject(bgR);
     
+    this.patrolUnitsInScene = [];
+    
     // dye pack reference
+    this.dyePacksInScene = [];
     this.testPack = new Renderable(gEngine.DefaultResources.getConstColorShader());
     c = hexToRgb("e5e5e5");
     this.testPack.setColor([c.r, c.g, c.b, c.a]);
@@ -136,13 +143,12 @@ MyGame.prototype.draw = function () {
     //**Canvas / UI elements must be drawn last**
     var c = hexToRgb("ffffff");
     gEngine.Core.clearCanvas([c.r, c.g, c.b, c.a]);
-    
-    
-    
     // draw main camera
     this.drawCamera(this.mCamera);
     this.vBackground.draw(this.mCamera);
     this.vMessages.draw(this.mCamera);
+    //**************************************************************************
+    //
     // draw viewports
     for (var i = 0; i < 4; i++) {
         var cam = this.mViewports.getCamera(i);
@@ -153,6 +159,7 @@ MyGame.prototype.draw = function () {
         }
         this.mViewports.draw(i);
     }
+    //**************************************************************************
 };
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
@@ -162,45 +169,74 @@ MyGame.prototype.update = function () {
     this.mViewports.update();
     this.mCamera.update(); 
     //**************************************************************************
-    
-    // update main camera message board
-    var camPos = this.mCamera.getWCCenter();                                    // to make the board always at the bottom of the 
-    this.vBackground.getXform().setPosition(camPos[0], camPos[1] - 82);         // camera, its position needs to update every frame
-    this.vMessages.getXform().setPosition(camPos[0] - 50, camPos[1] - 80);      // the camera does
+    // variables
+    var heroPos = this.mHero.getXform().getPosition();
+    var camPos = this.mCamera.getWCCenter(); 
+    var camSize = [this.mCamera.getWCWidth(), this.mCamera.getWCHeight()];
+    var msgBrd = "Viewport Size X: " + camSize[0].toFixed(2);
+    msgBrd += " Y: " + camSize[1].toFixed(2);
+    msgBrd += "   Hero Pos X:" + heroPos[0].toFixed(2) + " Y: " + heroPos[1].toFixed(2);
     //**************************************************************************
     
     // update mHero
     if(this.mCamera.isMouseInViewport()){                                       // only if the mouse is over the main camera
-        var heroPos = this.mHero.getXform().getPosition();
         var a = heroPos[0] - this.mCamera.mouseWCX();
         var b = heroPos[1] - this.mCamera.mouseWCY();
         var heroMag = Math.sqrt(a*a + b*b);
         var vmsg = "Hero mag: " + heroMag.toFixed(2);
 
-        if(this.mViewports.isViewportActive(0)){                                        // checks if the viewport is active
-            this.mViewports.setViewportText(0, vmsg);                                   // if so, sets text to mag (hero, mouse)
+        if(this.mViewports.isViewportActive(0)){                                // checks if the viewport is active
+            this.mViewports.setViewportText(0, vmsg);                           // if so, sets text to mag (hero, mouse)
         }
-
-        var heroInBounds = this.mHero.checkBounds(this.mCamera);
-        if(heroInBounds){
-            if (heroMag > 6) {                                                      // 6 is arbitrary, it is the threshold to 
+        
+        if (heroMag > 6) {                                                      // 6 is arbitrary, it is the threshold to 
             this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(),// stop moving the hero
                                         this.mCamera.mouseWCY()), 0.05);
             this.mHero.setSpeed(0.1);                                           // speed is arbitrary
             GameObject.prototype.update.call(this.mHero);
             var heroPos = this.mHero.getXform().getPosition();          
-            this.mViewports.setViewportWC(0, heroPos); 
-        }
-
-         
-        }
-                                            // update viewport[0] to hero center
+            this.mViewports.setViewportWC(0, heroPos);                          // update viewport[0] to hero center
+            
+            // bound hero to main camera
+            this.mCamera.clampAtBoundary(this.mHero.getXform(), 0.9);
+        }                              
     }
     //**************************************************************************
+    
+    // user input
+    // some of these can be moved to local class
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
-        var spawnPos = this.mHero.getXform().getPosition();
+        var spawnPos = heroPos;
         this.SpawnDyePack(spawnPos); 
     }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
+        this.msgBrdSpd = (this.msgBrdSpd <= 2) ? this.msgBrdSpd += 0.25 : 2;
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right)) {
+        this.msgBrdSpd = (this.msgBrdSpd > 0.25) ? this.msgBrdSpd -= 0.25 : 0.25;
+    }
+    //**************************************************************************
+    
+    // update counters
+    msgBrd += "    Dye Packs In Scene: " + this.dyePacksInScene.length;
+    msgBrd += "    Patrol Units Spawned: " + this.patrolUnitsInScene.length;
+    msgBrd += "    Auto Spawn Patrol Units: " + this.autoSpawnPatrol;
+    var msgBrdLng = this.vMessages.getXform().getWidth() / 2;
+    // update main camera message board
+    this.vBackground.getXform().setPosition(camPos[0], camPos[1] - 82);         // to make the board always at the bottom of the 
+    this.msgOffset+= this.msgBrdSpd;
+    this.msgOffset = (this.msgOffset < (msgBrdLng * 2)) ? this.msgOffset : -(msgBrdLng / 2);
+    this.vMessages.getXform().setPosition(camPos[0] - this.msgOffset, camPos[1] - 80);      // camera, its position needs to update every frame
+    // update text
+    if(Date.now() - this.lastMsgUpdate >= 250){
+        this.lastMsgUpdate = Date.now();
+        this.vMessages.setText(msgBrd);
+    }
+    
+    //**************************************************************************// the camera does
+    
+    
+    
     
     /* Legacy code
      * TODO
@@ -213,12 +249,6 @@ MyGame.prototype.update = function () {
     
     this.mHero.update();     // for WASD movement
     
-    this.mPortal.update(     // for arrow movement
-        gEngine.Input.keys.Up,
-        gEngine.Input.keys.Down,
-        gEngine.Input.keys.Left,
-        gEngine.Input.keys.Right
-    );
     // Pan camera to object
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.L)) {
         this.mFocusObj = this.mLMinion;
@@ -290,8 +320,8 @@ MyGame.prototype.update = function () {
 
     msg += " X=" + gEngine.Input.getMousePosX() + " Y=" + gEngine.Input.getMousePosY();
     
-    // bottom local
-    //this.vMessages[4].setText(msg);
+    
+
 };
 
 MyGame.prototype.SpawnDyePack = function(spawnPos){

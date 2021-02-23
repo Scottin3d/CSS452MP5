@@ -42,14 +42,13 @@ Hero.prototype.update = function () {
     }
 };
 
-Hero.prototype.checkBounds = function(camera){
+Hero.prototype.checkBounds = function(center, size){
     var heroPos = this.getXform().getPosition();
-    var camC = camera.getWCCenter();
-    var camW = camera.getWCWidth() / 2;
-    var camH = camera.getWCHeight() / 2;
+    var camW = size[0] / 2;
+    var camH = size[1] / 2;
     
-    if(heroPos[1] <= (camC[1] + camH) && heroPos >= (camC[1] - camH) &&
-       heroPos[0] >= (camC[0] - camW) && heroPos <= (camC[0] + camW)){
+    if(heroPos[0] >= (center[0] - camW) && heroPos[0] <= (center[0] + camW) &&
+       heroPos[1] <= (center[1] + camH) && heroPos[1] >= (center[1] - camH)){
         return true;
     }
     
