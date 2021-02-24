@@ -5,7 +5,7 @@
 
 /*jslint node: true, vars: true */
 /*global gEngine, Scene, GameObjectset, TextureObject, Camera, vec2,
-  FontRenderable, SpriteRenderable, DyePack, Hero, Minion, Brain, Patrol,
+  FontRenderable, SpriteRenderable, DyePack, Hero, Minion, Brain, PatrolSet,
   GameObject */
 /* find out more about jslint: http://www.jslint.com/help.html */
 
@@ -37,7 +37,7 @@ function MyGame() {
 
     // the hero and the support objects
     this.mHero = null;
-    this.mPatrol = null;
+    this.mPatrolSet = null;
     this.mPortal = null;
     this.mLMinion = null;
     this.mRMinion = null;
@@ -67,7 +67,7 @@ MyGame.prototype.initialize = function () {
     // I wrote the hexToRgb utility to help with better colors -- Scott
     var c; 
     // objects
-    this.mPatrol = new Patrol(this.kMinionSprite);
+    this.mPatrolSet = new PatrolSet(this.kMinionSprite);
     this.mHero = new Hero(this.kMinionSprite);
     this.mPortal = new TextureObject(this.kMinionPortal, 50, 30, 10, 10);
     
@@ -136,7 +136,7 @@ MyGame.prototype.drawCamera = function (camera) {
             pack.draw(camera);
         }
     }
-    this.mPatrol.draw(camera);
+    this.mPatrolSet.draw(camera);
 };
 // This is the draw function, make sure to setup proper drawing environment, and more
 // importantly, make sure to _NOT_ change any state.
@@ -253,8 +253,13 @@ MyGame.prototype.update = function () {
     //var msg = "L/R: Left or Right Minion; H: Dye; P: Portal]: ";
     var msg = "";
 
-    
-    this.mPatrol.update();
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.P)) {
+        this.mPatrolSet.setautoSpawn();
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C)) {
+        this.mPatrolSet.spawnNew();
+    }
+    this.mPatrolSet.update();
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
     this.mHero.update();     // for WASD movement
@@ -269,10 +274,6 @@ MyGame.prototype.update = function () {
         this.mFocusObj = this.mRMinion;
         this.mChoice = 'R';
         this.mCamera.panTo(this.mRMinion.getXform().getXPos(), this.mRMinion.getXform().getYPos());
-    }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.P)) {
-        this.mFocusObj = this.mPortal;
-        this.mChoice = 'P';
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.H)) {
         this.mFocusObj = this.mHero;

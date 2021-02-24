@@ -100,6 +100,22 @@ Patrol.prototype.draw = function (camera) {
 };
 Patrol.prototype.update = function () {
     
+    if(this.bigBox.maxX() >= 125 && this.horizontalSpeed > 0) {
+        
+        this.horizontalSpeed *= -1;
+    }
+    
+    if(this.bigBox.minX() <= -125 && this.horizontalSpeed < 0) {
+        
+        this.horizontalSpeed *= -1;
+    }
+    if(this.bigBox.maxY() >= (640/940) * 125 && this.verticalSpeed > 0) {
+        this.verticalSpeed *= -1;
+    }
+    if(this.bigBox.minY() <= (640/940) * -125 && this.verticalSpeed < 0) {
+        this.verticalSpeed *= -1;
+    }
+    
     this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + this.horizontalSpeed, this.mHead.getXform().getYPos() + this.verticalSpeed);
 
     
@@ -110,9 +126,9 @@ Patrol.prototype.update = function () {
     this.topInterpY.setFinalValue(this.mHead.getXform().getYPos() + 6);
     this.topInterpY.updateInterpolation();
     
-    
     this.mTopWing.getXform().setPosition(this.topInterpX.getValue(), this.topInterpY.getValue());
     this.mTopWing.updateAnimation();
+    
     
     this.bottomInterpX.setFinalValue(this.mHead.getXform().getXPos() + 10);
     this.bottomInterpX.updateInterpolation();
@@ -123,6 +139,8 @@ Patrol.prototype.update = function () {
     this.mBottomWing.getXform().setPosition(this.bottomInterpX.getValue(), this.bottomInterpY.getValue());
     this.mBottomWing.updateAnimation();
     
+    
+    
     this.headBox.setBounds(this.mHead.getXform().getPosition(), this.mHead.getXform().getWidth(), this.mHead.getXform().getHeight());
     this.topWingBox.setBounds(this.mTopWing.getXform().getPosition(), this.mTopWing.getXform().getWidth(), this.mTopWing.getXform().getHeight());
     this.bottomWingBox.setBounds(this.mBottomWing.getXform().getPosition(), this.mBottomWing.getXform().getWidth(), this.mBottomWing.getXform().getHeight());
@@ -131,27 +149,12 @@ Patrol.prototype.update = function () {
     this.BBheight = (this.topWingBox.maxY() - this.bottomWingBox.minY()) * 1.5;
     this.BBcenterX = this.headBox.minX() + (this.BBwidth / 2);
     this.BBcenterY = this.bottomWingBox.minY() + (this.BBheight / 2);
-    var center = vec2.fromValues(this.BBcenterX, this.BBcenterY)
+    var center = vec2.fromValues(this.BBcenterX, this.BBcenterY);
     this.bigBox.setBounds(center, this.BBwidth, this.BBheight);
     
     this.BBBB.setVertices(this.bigBox.minX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.minY());
     this.BBTB.setVertices(this.bigBox.minX(), this.bigBox.maxY(), this.bigBox.maxX(), this.bigBox.maxY());
     this.BBLB.setVertices(this.bigBox.minX(), this.bigBox.minY(), this.bigBox.minX(), this.bigBox.maxY());
     this.BBRB.setVertices(this.bigBox.maxX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.maxY());
-//    var xf = this.getXform();
-//    var fdir = this.getCurrentFrontDir();
-//    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Left)) {
-//        xf.incRotationByDegree(this.kDeltaDegree);
-//        vec2.rotate(fdir, fdir, this.kDeltaRad);
-//    }
-//    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Right)) {
-//        xf.incRotationByRad(-this.kDeltaRad);
-//        vec2.rotate(fdir, fdir, -this.kDeltaRad);
-//    }
-//    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Up)) {
-//        this.incSpeedBy(this.kDeltaSpeed);
-//    }
-//    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Down)) {
-//        this.incSpeedBy(-this.kDeltaSpeed);
-//    }
+
 };
