@@ -259,6 +259,9 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.C)) {
         this.mPatrolSet.spawnNew();
     }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.B)) {
+        this.mPatrolSet.toggleBound();
+    }
     this.mPatrolSet.update();
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();

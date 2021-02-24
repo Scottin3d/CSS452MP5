@@ -15,6 +15,7 @@ function PatrolSet(minionSprite) {
     this.autoSpawn = false;
     this.spawnTime = (2 + Math.random()) * 60;
     this.timer = 0;
+    this.showBound = false;
     this.mSet = [];
 }
 gEngine.Core.inheritPrototype(PatrolSet, GameObjectSet);
@@ -30,6 +31,7 @@ PatrolSet.prototype.update = function () {
     }
     var i;
     for (i = 0; i < this.mSet.length; i++) {
+        this.mSet[i].toggleBound(this.showBound);
         this.mSet[i].update();
     }
 };
@@ -43,3 +45,6 @@ PatrolSet.prototype.spawnNew = function() {
    this.addToSet(mPatrol);
 };
 
+PatrolSet.prototype.toggleBound = function() {
+    this.showBound = !this.showBound;
+};

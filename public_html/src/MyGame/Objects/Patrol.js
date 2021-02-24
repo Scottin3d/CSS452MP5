@@ -10,6 +10,8 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Patrol(spriteTexture) {
+    
+    this.showBound = false;
     this.mHead = new SpriteRenderable(spriteTexture);
     this.mHead.setColor([1, 1, 1, 0]);
     this.mHead.getXform().setPosition(Math.random() * 125, -42.5 + (Math.random() * 85)); // gross hardcoding values in based on main camera width height, and pos in world space
@@ -93,10 +95,12 @@ Patrol.prototype.draw = function (camera) {
     this.mHead.draw(camera);
     this.mTopWing.draw(camera);
     this.mBottomWing.draw(camera);
-    this.BBBB.draw(camera);
-    this.BBTB.draw(camera);
-    this.BBLB.draw(camera);
-    this.BBRB.draw(camera);
+    if(this.showBound) {
+       this.BBBB.draw(camera);
+        this.BBTB.draw(camera);
+        this.BBLB.draw(camera);
+        this.BBRB.draw(camera);
+    }
 };
 Patrol.prototype.update = function () {
     
@@ -157,4 +161,8 @@ Patrol.prototype.update = function () {
     this.BBLB.setVertices(this.bigBox.minX(), this.bigBox.minY(), this.bigBox.minX(), this.bigBox.maxY());
     this.BBRB.setVertices(this.bigBox.maxX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.maxY());
 
+};
+
+Patrol.prototype.toggleBound = function(toggle) {
+    this.showBound = toggle;
 };
