@@ -78,6 +78,34 @@ function Patrol(spriteTexture) {
     this.BBLB.setPointSize(10);
     this.BBRB = new LineRenderable(this.bigBox.maxX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.maxY());
     this.BBRB.setPointSize(10);
+    
+    
+    this.HBBB = new LineRenderable(this.headBox.minX(), this.headBox.minY(), this.headBox.maxX(), this.headBox.minY());
+    this.HBBB.setPointSize(10);
+    this.HBTB = new LineRenderable(this.headBox.minX(), this.headBox.maxY(), this.headBox.maxX(), this.headBox.maxY());
+    this.HBTB.setPointSize(10);
+    this.HBLB = new LineRenderable(this.headBox.minX(), this.headBox.minY(), this.headBox.minX(), this.headBox.maxY());
+    this.HBLB.setPointSize(10);
+    this.HBRB = new LineRenderable(this.headBox.maxX(), this.headBox.minY(), this.headBox.maxX(), this.headBox.maxY());
+    this.HBRB.setPointSize(10);
+    
+    this.TWBBB = new LineRenderable(this.topWingBox.minX(), this.topWingBox.minY(), this.topWingBox.maxX(), this.topWingBox.minY());
+    this.TWBBB.setPointSize(10);
+    this.TWBTB = new LineRenderable(this.topWingBox.minX(), this.topWingBox.maxY(), this.topWingBox.maxX(), this.topWingBox.maxY());
+    this.TWBTB.setPointSize(10);
+    this.TWBLB = new LineRenderable(this.topWingBox.minX(), this.topWingBox.minY(), this.topWingBox.minX(), this.topWingBox.maxY());
+    this.TWBLB.setPointSize(10);
+    this.TWBRB = new LineRenderable(this.topWingBox.maxX(), this.topWingBox.minY(), this.topWingBox.maxX(), this.topWingBox.maxY());
+    this.TWBRB.setPointSize(10);
+    
+    this.BWBBB = new LineRenderable(this.bottomWingBox.minX(), this.bottomWingBox.minY(), this.bottomWingBox.maxX(), this.bottomWingBox.minY());
+    this.BWBBB.setPointSize(10);
+    this.BWBTB = new LineRenderable(this.bottomWingBox.minX(), this.bottomWingBox.maxY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
+    this.BWBTB.setPointSize(10);
+    this.BWBLB = new LineRenderable(this.bottomWingBox.minX(), this.bottomWingBox.minY(), this.bottomWingBox.minX(), this.bottomWingBox.maxY());
+    this.BWBLB.setPointSize(10);
+    this.BWBRB = new LineRenderable(this.bottomWingBox.maxX(), this.bottomWingBox.minY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
+    this.BWBRB.setPointSize(10);
     //this.mBottomWing = new SpriteRenderable(wingTexture);
     //this.mTopBound = new LineRenderable();
     //this.mBottomBound = null;
@@ -96,10 +124,25 @@ Patrol.prototype.draw = function (camera) {
     this.mTopWing.draw(camera);
     this.mBottomWing.draw(camera);
     if(this.showBound) {
-       this.BBBB.draw(camera);
+        this.BBBB.draw(camera);
         this.BBTB.draw(camera);
         this.BBLB.draw(camera);
         this.BBRB.draw(camera);
+        
+        this.HBBB.draw(camera);
+        this.HBTB.draw(camera);
+        this.HBLB.draw(camera);
+        this.HBRB.draw(camera);
+        
+        this.TWBBB.draw(camera);
+        this.TWBTB.draw(camera);
+        this.TWBLB.draw(camera);
+        this.TWBRB.draw(camera);
+        
+        this.BWBBB.draw(camera);
+        this.BWBTB.draw(camera);
+        this.BWBLB.draw(camera);
+        this.BWBRB.draw(camera);
     }
 };
 Patrol.prototype.update = function () {
@@ -160,7 +203,21 @@ Patrol.prototype.update = function () {
     this.BBTB.setVertices(this.bigBox.minX(), this.bigBox.maxY(), this.bigBox.maxX(), this.bigBox.maxY());
     this.BBLB.setVertices(this.bigBox.minX(), this.bigBox.minY(), this.bigBox.minX(), this.bigBox.maxY());
     this.BBRB.setVertices(this.bigBox.maxX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.maxY());
-
+    
+    this.HBBB.setVertices(this.headBox.minX(), this.headBox.minY(), this.headBox.maxX(), this.headBox.minY());
+    this.HBTB.setVertices(this.headBox.minX(), this.headBox.maxY(), this.headBox.maxX(), this.headBox.maxY());
+    this.HBLB.setVertices(this.headBox.minX(), this.headBox.minY(), this.headBox.minX(), this.headBox.maxY());
+    this.HBRB.setVertices(this.headBox.maxX(), this.headBox.minY(), this.headBox.maxX(), this.headBox.maxY());
+    
+    this.TWBBB.setVertices(this.topWingBox.minX(), this.topWingBox.minY(), this.topWingBox.maxX(), this.topWingBox.minY());
+    this.TWBTB.setVertices(this.topWingBox.minX(), this.topWingBox.maxY(), this.topWingBox.maxX(), this.topWingBox.maxY());
+    this.TWBLB.setVertices(this.topWingBox.minX(), this.topWingBox.minY(), this.topWingBox.minX(), this.topWingBox.maxY());
+    this.TWBRB.setVertices(this.topWingBox.maxX(), this.topWingBox.minY(), this.topWingBox.maxX(), this.topWingBox.maxY());
+    
+    this.BWBBB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.minY(), this.bottomWingBox.maxX(), this.bottomWingBox.minY());
+    this.BWBTB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.maxY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
+    this.BWBLB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.minY(), this.bottomWingBox.minX(), this.bottomWingBox.maxY());
+    this.BWBRB.setVertices(this.bottomWingBox.maxX(), this.bottomWingBox.minY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
 };
 
 Patrol.prototype.toggleBound = function(toggle) {
