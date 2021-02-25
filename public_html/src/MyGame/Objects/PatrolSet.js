@@ -61,18 +61,22 @@ PatrolSet.prototype.checkCollision = function(packBB) {
     for (i = 0; i < this.mSet.length; i++) {
         if(this.mSet[i].getHeadBB().intersectsBound(packBB)) {
             this.mSet[i].headHit();
-            return true;
+            return 1;
         }
         if(this.mSet[i].getTWBB().intersectsBound(packBB)) {
             this.mSet[i].TWHit();
-            return true;
+            return 1;
         }
         if(this.mSet[i].getBWBB().intersectsBound(packBB)) {
             this.mSet[i].BWHit();
-            return true;
+            return 1;
+        }
+        if(this.mSet[i].getBWBB().intersectsBound(packBB)) {
+            this.mSet[i].BWHit();
+            return 2;
         }
     }
-    return false;
+    return -1;
 };
 
 PatrolSet.prototype.simulateHit = function() {
