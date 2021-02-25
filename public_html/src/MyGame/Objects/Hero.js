@@ -19,6 +19,8 @@ function Hero(spriteTexture) {
     this.heroHitFrequency = null;
     this.heroHitDuration = null;
     
+    this.heroShake = null;
+    
     this.kDelta = 0.3;
 
     this.mSrite = new SpriteRenderable(spriteTexture);
@@ -47,22 +49,13 @@ Hero.prototype.update = function () {
         }
     }
     
+    // Q
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.L)){
+        this.heroShake = new ShakePosition(-2, -2, 20, 30);
+        
+    }
     
     
-    // control by WASD
-    var xform = this.getXform();
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W)) {
-        xform.incYPosBy(this.kDelta);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)) {
-        xform.incYPosBy(-this.kDelta);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)) {
-        xform.incXPosBy(-this.kDelta);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
-        xform.incXPosBy(this.kDelta);
-    }
 };
 
 Hero.prototype.checkBounds = function(center, size){
