@@ -11,6 +11,8 @@
 
 function Patrol(spriteTexture) {
     
+    this.offEdge = false;
+    this.wingDeath = false;
     this.showBound = false;
     this.mHead = new SpriteRenderable(spriteTexture);
     this.mHead.setColor([1, 1, 1, 0]);
@@ -218,6 +220,13 @@ Patrol.prototype.update = function () {
     this.BWBTB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.maxY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
     this.BWBLB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.minY(), this.bottomWingBox.minX(), this.bottomWingBox.maxY());
     this.BWBRB.setVertices(this.bottomWingBox.maxX(), this.bottomWingBox.minY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
+    
+    if(this.bigBox.minX() >= 125) {
+        this.offEdge = true;
+    }
+    if(this.mTopWing.getColor()[3] >= 1 || this.mBottomWing.getColor()[3] >= 1) {
+        this.wingDeath = true;
+    }
 };
 
 Patrol.prototype.toggleBound = function(toggle) {
@@ -252,4 +261,11 @@ Patrol.prototype.BWHit = function() {
     var mColor = this.mBottomWing.getColor();
     mColor[3] += 0.2;
     this.mBottomWing.setColor(mColor);
+};
+
+Patrol.prototype.timeForDeath = function() {
+    if(this.offEdge || this.wingDeath) {
+        console.log("im dead");
+    }
+    return this.offEdge || this.wingDeath;
 };

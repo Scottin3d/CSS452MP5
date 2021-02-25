@@ -31,11 +31,16 @@ PatrolSet.prototype.update = function () {
     } else {
         this.timer += 1;
     }
+    var newMSet = this.mSet;
     var i;
     for (i = 0; i < this.mSet.length; i++) {
         this.mSet[i].toggleBound(this.showBound);
         this.mSet[i].update();
+        if(this.mSet[i].timeForDeath()) {
+            newMSet.splice(newMSet.indexOf(this.mSet[i]), 1);
+        }
     }
+    this.mSet = newMSet;
 };
 
 PatrolSet.prototype.setautoSpawn = function() {
