@@ -11,6 +11,8 @@
 
 function Patrol(spriteTexture) {
     
+    this.offEdge = false;
+    this.wingDeath = false;
     this.showBound = false;
     this.mHead = new SpriteRenderable(spriteTexture);
     this.mHead.setColor([1, 1, 1, 0]);
@@ -218,8 +220,52 @@ Patrol.prototype.update = function () {
     this.BWBTB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.maxY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
     this.BWBLB.setVertices(this.bottomWingBox.minX(), this.bottomWingBox.minY(), this.bottomWingBox.minX(), this.bottomWingBox.maxY());
     this.BWBRB.setVertices(this.bottomWingBox.maxX(), this.bottomWingBox.minY(), this.bottomWingBox.maxX(), this.bottomWingBox.maxY());
+    
+    if(this.bigBox.minX() >= 125) {
+        this.offEdge = true;
+    }
+    if(this.mTopWing.getColor()[3] >= 1 || this.mBottomWing.getColor()[3] >= 1) {
+        this.wingDeath = true;
+    }
 };
 
 Patrol.prototype.toggleBound = function(toggle) {
     this.showBound = toggle;
+};
+
+Patrol.prototype.getHeadBB = function() {
+    return this.headBox;
+};
+
+Patrol.prototype.getTWBB = function() {
+    return this.topWingBox;
+};
+
+Patrol.prototype.getBWBB = function() {
+    return this.bottomWingBox;
+};
+
+Patrol.prototype.headHit = function() {
+    this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + 5, this.mHead.getXform().getYPos());
+};
+
+Patrol.prototype.TWHit = function() {
+    console.log("top wing hit");
+    var mColor = this.mTopWing.getColor();
+    mColor[3] += 0.2;
+    this.mTopWing.setColor(mColor);
+};
+
+Patrol.prototype.BWHit = function() {
+    console.log("bottom wing hit");
+    var mColor = this.mBottomWing.getColor();
+    mColor[3] += 0.2;
+    this.mBottomWing.setColor(mColor);
+};
+
+Patrol.prototype.timeForDeath = function() {
+    if(this.offEdge || this.wingDeath) {
+        console.log("im dead");
+    }
+    return this.offEdge || this.wingDeath;
 };

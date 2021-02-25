@@ -160,6 +160,9 @@ MyGame.prototype.update = function () {
     this.mViewports.update();
     this.mCamera.update(); 
     
+    
+    
+    
     // update dye packs
     for (var i = 0; i < this.dyePacksInScene.length; i++) {
         var dyePack = this.dyePacksInScene[i];
@@ -172,7 +175,7 @@ MyGame.prototype.update = function () {
             this.dyePacksInScene.shift();
             i = 0;
         }
-        
+        this.mPatrolSet.checkCollision(dyePack.getBBox());
         dyePack.update();
     }
     //**************************************************************************
@@ -297,7 +300,8 @@ MyGame.prototype.update = function () {
         this.mCamera.zoomBy(1 + zoomDelta);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J)) {
-        this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 - zoomDelta);
+        this.mPatrolSet.simulateHit();
+        //this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 - zoomDelta);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
         this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 + zoomDelta);
