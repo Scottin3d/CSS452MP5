@@ -35,10 +35,10 @@ gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
     if(this.heroHit){
-        console.log(Date.now() - this.heroHitTime);
+        //console.log(Date.now() - this.heroHitTime);
         if(Date.now() - this.heroHitTime < this.heroHitDuration){
             var sizeX = this.getXform().getWidth() * Math.sin(Date.now() /  this.heroHitFrequency);
-            console.log(sizeX);
+            //console.log(sizeX);
             
         }else{
             this.heroHit = false;

@@ -19,6 +19,7 @@ function Patrol(spriteTexture) {
     this.mHead.getXform().setPosition(Math.random() * 125, -42.5 + (Math.random() * 85)); // gross hardcoding values in based on main camera width height, and pos in world space
     this.mHead.getXform().setSize(7.5, 7.5);
     this.mHead.setElementPixelPositions(600, 700, 0, 180);
+    this.mHead._setTexInfo();
     
     this.mTopWing = new SpriteAnimateRenderable(spriteTexture);
     this.mTopWing.setColor([1, 1, 1, 0]);
@@ -30,6 +31,7 @@ function Patrol(spriteTexture) {
                                     0);         // horizontal padding in between
     this.mTopWing.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateSwing);
     this.mTopWing.setAnimationSpeed(30);
+    this.mTopWing._setTexInfo();
     
     this.mBottomWing = new SpriteAnimateRenderable(spriteTexture);
     this.mBottomWing.setColor([1, 1, 1, 0]);
@@ -41,6 +43,7 @@ function Patrol(spriteTexture) {
                                     0);         // horizontal padding in between
     this.mBottomWing.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateSwing);
     this.mBottomWing.setAnimationSpeed(30);
+    this.mBottomWing._setTexInfo();
     
     this.topInterpX = new Interpolate(this.mTopWing.getXform().getXPos(), 120, 0.05);
     this.topInterpY = new Interpolate(this.mTopWing.getXform().getYPos(), 120, 0.05);
@@ -237,6 +240,9 @@ Patrol.prototype.getHeadBB = function() {
     return this.headBox;
 };
 
+Patrol.prototype.getBB = function() {
+    return this.bigBox;
+};
 Patrol.prototype.getTWBB = function() {
     return this.topWingBox;
 };
@@ -246,6 +252,7 @@ Patrol.prototype.getBWBB = function() {
 };
 
 Patrol.prototype.headHit = function() {
+    console.log("head hit");
     this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + 5, this.mHead.getXform().getYPos());
 };
 

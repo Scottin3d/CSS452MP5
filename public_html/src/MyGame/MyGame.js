@@ -177,7 +177,7 @@ MyGame.prototype.update = function () {
             this.dyePacksInScene.shift();
             i = 0;
         }
-        this.mPatrolSet.checkCollision(dyePack.getBBox());
+        this.mPatrolSet.checkCollision(dyePack);
         dyePack.update();
     }
     //**************************************************************************
