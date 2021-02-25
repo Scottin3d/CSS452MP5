@@ -63,6 +63,7 @@ PatrolSet.prototype.isAutoSpawnOn = function() {
 
 PatrolSet.prototype.patrolSize = function() {
     return this.mSet.length;
+};
 PatrolSet.prototype.checkCollision = function(packBB) {
     var i;
     for (i = 0; i < this.mSet.length; i++) {
