@@ -102,7 +102,7 @@ MyGame.prototype.initialize = function () {
     // from spec 
     // vp[0] is width 15
     this.mViewports.setViewportWidth(0, 15);
-   
+    this.mViewports.toggleViewport(0, true);
     // Large background image
     var bgR = new SpriteRenderable(this.space);
     bgR.setElementPixelPositions(0, 1024, 0, 1024);
@@ -113,6 +113,8 @@ MyGame.prototype.initialize = function () {
     // dye pack reference
     this.dyePacksInScene = [];
 };
+
+
 
 
 MyGame.prototype.drawCamera = function (camera) {
