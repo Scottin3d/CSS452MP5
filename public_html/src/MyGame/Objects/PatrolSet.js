@@ -22,10 +22,12 @@ gEngine.Core.inheritPrototype(PatrolSet, GameObjectSet);
 
 
 PatrolSet.prototype.update = function () {
-    if(this.autoSpawn && this.timer >= this.spawnTime) {
+    if(this.timer >= this.spawnTime) {
         this.timer -= this.spawnTime;
-        var mPatrol = new Patrol(this.kMinionSprite);
-        this.addToSet(mPatrol);
+        if(this.autoSpawn) {
+            var mPatrol = new Patrol(this.kMinionSprite);
+            this.addToSet(mPatrol);
+        }
     } else {
         this.timer += 1;
     }
@@ -47,4 +49,30 @@ PatrolSet.prototype.spawnNew = function() {
 
 PatrolSet.prototype.toggleBound = function() {
     this.showBound = !this.showBound;
+};
+
+PatrolSet.prototype.checkCollision = function(packBB) {
+    var i;
+    for (i = 0; i < this.mSet.length; i++) {
+        if(this.mSet[i].getHeadBB().intersectsBound(packBB)) {
+            this.mSet[i].headHit();
+            return true;
+        }
+        if(this.mSet[i].getTWBB().intersectsBound(packBB)) {
+            this.mSet[i].TWHit();
+            return true;
+        }
+        if(this.mSet[i].getBWBB().intersectsBound(packBB)) {
+            this.mSet[i].BWHit();
+            return true;
+        }
+    }
+    return false;
+};
+
+PatrolSet.prototype.simulateHit = function() {
+    var i;
+    for (i = 0; i < this.mSet.length; i++) {
+        this.mSet[i].headHit();
+    }
 };

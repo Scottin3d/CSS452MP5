@@ -223,3 +223,33 @@ Patrol.prototype.update = function () {
 Patrol.prototype.toggleBound = function(toggle) {
     this.showBound = toggle;
 };
+
+Patrol.prototype.getHeadBB = function() {
+    return this.headBox;
+};
+
+Patrol.prototype.getTWBB = function() {
+    return this.topWingBox;
+};
+
+Patrol.prototype.getBWBB = function() {
+    return this.bottomWingBox;
+};
+
+Patrol.prototype.headHit = function() {
+    this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + 5, this.mHead.getXform().getYPos());
+};
+
+Patrol.prototype.TWHit = function() {
+    console.log("top wing hit");
+    var mColor = this.mTopWing.getColor();
+    mColor[3] += 0.2;
+    this.mTopWing.setColor(mColor);
+};
+
+Patrol.prototype.BWHit = function() {
+    console.log("bottom wing hit");
+    var mColor = this.mBottomWing.getColor();
+    mColor[3] += 0.2;
+    this.mBottomWing.setColor(mColor);
+};
