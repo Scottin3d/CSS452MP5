@@ -16,16 +16,19 @@
         <group name="AllBookProjects"/>
         <group name="Apress-2d-game-engine"/>
         <group>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Viewports.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Cameras/Camera_Manipulation.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Cameras/CameraShake.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Cameras/Camera.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Core/Engine_Input.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Minion.js</file>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Utils/Transform.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Renderables/SpriteRenderable.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Hero.js</file>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/styles.css</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/index.html</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/DyePack.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Cameras/CameraState.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Viewports.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Utils/Transform.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/styles.css</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/MyGame.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Brain.js</file>
         </group>

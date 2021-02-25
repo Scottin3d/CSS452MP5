@@ -214,6 +214,7 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
         var spawnPos = heroPos;
         this.SpawnDyePack(spawnPos); 
+        this.mHero.hit(.5, 4, 60);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
         this.msgBrdSpd = (this.msgBrdSpd <= 2) ? this.msgBrdSpd += 0.25 : 2;

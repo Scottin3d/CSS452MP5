@@ -12,6 +12,13 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Hero(spriteTexture) {
+    this.heroHit = false;
+    this.heroHitTime = 0;
+    this.heroHitInterval = 0;
+    this.heroHitAmplitude = null;
+    this.heroHitFrequency = null;
+    this.heroHitDuration = null;
+    
     this.kDelta = 0.3;
 
     this.mSrite = new SpriteRenderable(spriteTexture);
@@ -25,6 +32,22 @@ function Hero(spriteTexture) {
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
+    if(this.heroHit){
+        console.log(Date.now() - this.heroHitTime);
+        if(Date.now() - this.heroHitTime < this.heroHitDuration){
+            var sizeX = this.getXform().getWidth() * Math.sin(Date.now() /  this.heroHitFrequency);
+            console.log(sizeX);
+            
+        }else{
+            this.heroHit = false;
+            this.heroHitTime = 0;
+            this.heroHitAmplitude = null;
+            this.heroHitFrequency = null;
+            this.heroHitDuration = null;
+        }
+    }
+    
+    
     
     // control by WASD
     var xform = this.getXform();
@@ -53,4 +76,13 @@ Hero.prototype.checkBounds = function(center, size){
     }
     
     return false;
+};
+
+Hero.prototype.hit = function(amplitude, frequency, duration){
+    this.heroHit = true;
+    this.heroHitTime = Date.now();
+    this.heroHitAmplitude = amplitude;
+    this.heroHitFrequency = frequency;
+    this.heroHitDuration = duration;
+    
 };
