@@ -56,6 +56,13 @@ PatrolSet.prototype.toggleBound = function() {
     this.showBound = !this.showBound;
 };
 
+
+PatrolSet.prototype.isAutoSpawnOn = function() {
+    return this.autoSpawn;
+};
+
+PatrolSet.prototype.patrolSize = function() {
+    return this.mSet.length;
 PatrolSet.prototype.checkCollision = function(packBB) {
     var i;
     for (i = 0; i < this.mSet.length; i++) {

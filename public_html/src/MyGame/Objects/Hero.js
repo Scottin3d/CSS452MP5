@@ -12,6 +12,15 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Hero(spriteTexture) {
+    this.heroHit = false;
+    this.heroHitTime = 0;
+    this.heroHitInterval = 0;
+    this.heroHitAmplitude = null;
+    this.heroHitFrequency = null;
+    this.heroHitDuration = null;
+    
+    this.heroShake = null;
+    
     this.kDelta = 0.3;
 
     this.mSrite = new SpriteRenderable(spriteTexture);
@@ -25,21 +34,28 @@ function Hero(spriteTexture) {
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
+    if(this.heroHit){
+        console.log(Date.now() - this.heroHitTime);
+        if(Date.now() - this.heroHitTime < this.heroHitDuration){
+            var sizeX = this.getXform().getWidth() * Math.sin(Date.now() /  this.heroHitFrequency);
+            console.log(sizeX);
+            
+        }else{
+            this.heroHit = false;
+            this.heroHitTime = 0;
+            this.heroHitAmplitude = null;
+            this.heroHitFrequency = null;
+            this.heroHitDuration = null;
+        }
+    }
     
-    // control by WASD
-    var xform = this.getXform();
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W)) {
-        xform.incYPosBy(this.kDelta);
+    // Q
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.L)){
+        this.heroShake = new ShakePosition(-2, -2, 20, 30);
+        
     }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)) {
-        xform.incYPosBy(-this.kDelta);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)) {
-        xform.incXPosBy(-this.kDelta);
-    }
-    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
-        xform.incXPosBy(this.kDelta);
-    }
+    
+    
 };
 
 Hero.prototype.checkBounds = function(center, size){
@@ -53,4 +69,13 @@ Hero.prototype.checkBounds = function(center, size){
     }
     
     return false;
+};
+
+Hero.prototype.hit = function(amplitude, frequency, duration){
+    this.heroHit = true;
+    this.heroHitTime = Date.now();
+    this.heroHitAmplitude = amplitude;
+    this.heroHitFrequency = frequency;
+    this.heroHitDuration = duration;
+    
 };
