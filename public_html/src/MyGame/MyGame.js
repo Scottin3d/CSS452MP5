@@ -29,11 +29,8 @@ function MyGame() {
     this.vMessages = null;
     this.vBackground = null;
     
-
-    this.autoSpawnPatrol = false;
     this.testPack = null;
     this.dyePacksInScene = null;
-    this.patrolUnitsInScene = null;
 
     // the hero and the support objects
     this.mHero = null;
@@ -112,8 +109,6 @@ MyGame.prototype.initialize = function () {
     bgR.getXform().setSize(250, 250);
     bgR.getXform().setPosition(0, 0);
     this.mBg = new GameObject(bgR);
-    
-    this.patrolUnitsInScene = [];
     
     // dye pack reference
     this.dyePacksInScene = [];
@@ -232,8 +227,8 @@ MyGame.prototype.update = function () {
     
     // update counters
     msgBrd += "    Dye Packs In Scene: " + this.dyePacksInScene.length;
-    msgBrd += "    Patrol Units Spawned: " + this.patrolUnitsInScene.length;
-    msgBrd += "    Auto Spawn Patrol Units: " + this.autoSpawnPatrol;
+    msgBrd += "    Patrol Units Spawned: " + this.mPatrolSet.patrolSize();
+    msgBrd += "    Auto Spawn Patrol Units: " + this.mPatrolSet.isAutoSpawnOn();
     var msgBrdLng = this.vMessages.getXform().getWidth() / 2;
     // update main camera message board
     this.vBackground.getXform().setPosition(camPos[0], camPos[1] - 82);         // to make the board always at the bottom of the 
@@ -274,6 +269,8 @@ MyGame.prototype.update = function () {
     this.mRMinion.update();
     this.mHero.update();     // for WASD movement
     
+    
+    
     // Pan camera to object
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.L)) {
         this.mFocusObj = this.mLMinion;
@@ -290,6 +287,8 @@ MyGame.prototype.update = function () {
         this.mChoice = 'H';
     }
 
+    // TODO delete
+    /*
     // zoom
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.N)) {
         this.mCamera.zoomBy(1 - zoomDelta);
@@ -303,16 +302,17 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
         this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 + zoomDelta);
     }
-
+    */
     // interaction with the WC bound
     //this.mCamera.clampAtBoundary(this.mBrain.getXform(), 0.9);
     this.mCamera.clampAtBoundary(this.mPortal.getXform(), 0.8);
     this.mCamera.panWith(this.mHero.getXform(), 0.9);
 
+    /*
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)) {
         this.mCamera.shake(-2, -2, 20, 30);
     }
-    
+    */
     
     
     msg = "";
@@ -338,11 +338,6 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isButtonClicked(gEngine.Input.mouseButton.Middle)) {
         this.mPortal.setVisibility(true);
     }
-
-    msg += " X=" + gEngine.Input.getMousePosX() + " Y=" + gEngine.Input.getMousePosY();
-    
-    
-
 };
 
 MyGame.prototype.UpdateDyePack = function(dyePack) {
