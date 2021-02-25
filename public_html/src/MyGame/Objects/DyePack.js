@@ -36,4 +36,4 @@ DyePack.prototype.draw = function (camera) {
 
 DyePack.prototype.shake = function() {
     
-}
+};

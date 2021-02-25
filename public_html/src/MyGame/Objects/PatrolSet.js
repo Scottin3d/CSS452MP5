@@ -65,27 +65,61 @@ PatrolSet.prototype.patrolSize = function() {
     return this.mSet.length;
 };
 
-PatrolSet.prototype.checkCollision = function(packBB) {
+
+PatrolSet.prototype.checkCollision = function(pack) {
     var i;
+    var toReturn = -1;
+    var pixelCol = false;
     for (i = 0; i < this.mSet.length; i++) {
-        if(this.mSet[i].getHeadBB().intersectsBound(packBB)) {
-            this.mSet[i].headHit();
-            return 1;
-        }
-        if(this.mSet[i].getTWBB().intersectsBound(packBB)) {
-            this.mSet[i].TWHit();
-            return 1;
-        }
-        if(this.mSet[i].getBWBB().intersectsBound(packBB)) {
-            this.mSet[i].BWHit();
-            return 1;
-        }
-        if(this.mSet[i].getBWBB().intersectsBound(packBB)) {
-            this.mSet[i].BWHit();
-            return 2;
+        var patrol = this.mSet[i];
+        var otherBbox = pack.getBBox();
+        if(otherBbox.boundCollideStatus(patrol.getBB()) !== 0) {
+            if (otherBbox.boundCollideStatus(patrol.getHeadBB()) !== 0) {
+                if ((typeof patrol.mHead.pixelTouches === "function") && (typeof pack.getRenderable().pixelTouches === "function")) {
+                    patrol.mHead.setColorArray();
+                    pack.getRenderable().setColorArray();
+                    var wcTouchPos = [];
+                    var touched = patrol.mHead.pixelTouches(pack.getRenderable(), wcTouchPos);
+                    if(touched) {
+                        this.mSet[i].headHit();
+                        pixelCol = true;
+                    }
+                }
+            } 
+            if (otherBbox.boundCollideStatus(patrol.getTWBB()) !== 0) {
+                console.log("in top wing");
+                if ((typeof patrol.mTopWing.pixelTouches === "function") && (typeof pack.getRenderable().pixelTouches === "function")) {
+                    patrol.mTopWing.setColorArray();
+                    pack.getRenderable().setColorArray();
+                    var wcTouchPos = [];
+                    var touched = patrol.mTopWing.pixelTouches(pack.getRenderable(), wcTouchPos);
+                    if(touched) {
+                        this.mSet[i].TWHit();
+                        pixelCol = true;
+                    }
+                }
+            } 
+            if (otherBbox.boundCollideStatus(patrol.getBWBB()) !== 0) {
+                console.log("in bottom wing");
+                if ((typeof patrol.mBottomWing.pixelTouches === "function") && (typeof pack.getRenderable().pixelTouches === "function")) {
+                    patrol.mBottomWing.setColorArray();
+                    pack.getRenderable().setColorArray();
+                    var wcTouchPos = [];
+                    var touched = patrol.mBottomWing.pixelTouches(pack.getRenderable(), wcTouchPos);
+                    if(touched) {
+                        this.mSet[i].BWHit();
+                        pixelCol = true;
+                    }
+                }
+            } 
+            if(pixelCol) {
+                return 1;
+            } else {
+                toReturn = 0;
+            }
         }
     }
-    return -1;
+    return toReturn;
 };
 
 PatrolSet.prototype.simulateHit = function() {
