@@ -15,20 +15,20 @@ function DyePack(spriteTexture) {
     this.kDelta = 0.5;
 
     this.mDyePack = new SpriteRenderable(spriteTexture);
-    this.mDyePack.setColor([1, 1, 1, 0.1]);
-    //this.mDyePack.getXform().setPosition(50, 33);
-    this.mDyePack.getXform().setSize(this.kRefWidth / 50, this.kRefHeight / 50);
+    this.mDyePack.setColor([1, 1, 1, 0]);
     this.mDyePack.setElementPixelPositions(510, 595, 23, 153);
     GameObject.call(this, this.mDyePack);
 }
 gEngine.Core.inheritPrototype(DyePack, GameObject);
 
 DyePack.prototype.update = function () {
-    var xform = this.getXform();
-    xform.incYPosBy(this.kDelta);
-    
+    var xform = this.getXform();    
 
     if (this.isVisible()) {
-        xform.incYPosBy(-this.kDelta);
+        xform.incXPosBy(this.kDelta);
     }
+};
+
+DyePack.prototype.draw = function (camera) {
+    this.mDyePack.draw(camera);
 };

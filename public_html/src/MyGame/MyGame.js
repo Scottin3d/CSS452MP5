@@ -117,10 +117,6 @@ MyGame.prototype.initialize = function () {
     
     // dye pack reference
     this.dyePacksInScene = [];
-    this.testPack = new DyePack(this.kMinionPortal);
-    //c = hexToRgb("e5e5e5");
-    //this.testPack.setColor([c.r, c.g, c.b, c.a]);
-    this.testPack.getXform().setSize(2, 3.5);
 };
 
 
@@ -129,8 +125,7 @@ MyGame.prototype.drawCamera = function (camera) {
     this.mBg.draw(camera);
     this.mHero.draw(camera);
     
-
-    if(this.dyePacksInScene){
+    if(this.dyePacksInScene.length > 0){
         for (var i = 0; i < this.dyePacksInScene.length; i++) {
             var pack = this.dyePacksInScene[i];
             pack.draw(camera);
@@ -172,7 +167,18 @@ MyGame.prototype.update = function () {
     
     // update dye packs
     for (var i = 0; i < this.dyePacksInScene.length; i++) {
-        this.dyePacksInScene[i].update();
+        var dyePack = this.dyePacksInScene[i];
+        var mainCameraSize = this.mCamera.getWCWidth();
+        var mainCameraPos = this.mCamera.getWCCenter()[0];
+        var firstDyePackPos = this.dyePacksInScene[0].getXform().getPosition();
+        var firstDyePackSize = this.dyePacksInScene[0].getXform().getSize();
+        // if dye pack is out of frame, remove from array
+        if (firstDyePackPos[0] - firstDyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
+            this.dyePacksInScene.shift();
+            i = 0;
+        }
+        
+        dyePack.update();
     }
     //**************************************************************************
     // variables
@@ -339,14 +345,21 @@ MyGame.prototype.update = function () {
 
 };
 
+MyGame.prototype.UpdateDyePack = function(dyePack) {
+    
+};
+
 MyGame.prototype.SpawnDyePack = function(spawnPos){
     
-    var packClone = new DyePack(this.kMinionPortal);
-    packClone.getXform().setPosition(spawnPos[0], spawnPos[1]);
-    packClone.getXform().setSize(20, 10);
-    this.dyePacksInScene.push(packClone);  
     
+    var packClone = new DyePack(this.kMinionSprite);
+    packClone.getXform().setPosition(spawnPos[0], spawnPos[1]);
+    packClone.getXform().setSize(2, 3.25);
+    this.dyePacksInScene.push(packClone);
+    /*
     var i = this.mViewports.getNextAvailableViewport();
     this.mViewports.toggleViewport(i, true);
     this.mViewports.setViewportWC(i, spawnPos);
+     *
+     */
 };
