@@ -13,6 +13,7 @@ function DyePack(spriteTexture) {
     this.kRefWidth = 80;
     this.kRefHeight = 130;
     this.kDelta = 0.5;
+    this.mShakePack = null;
 
     this.mDyePack = new SpriteRenderable(spriteTexture);
     this.mDyePack.setColor([1, 1, 1, 0]);
@@ -32,3 +33,7 @@ DyePack.prototype.update = function () {
 DyePack.prototype.draw = function (camera) {
     this.mDyePack.draw(camera);
 };
+
+DyePack.prototype.shake = function() {
+    
+}

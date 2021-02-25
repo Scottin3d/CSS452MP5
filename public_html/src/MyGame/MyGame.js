@@ -348,10 +348,6 @@ MyGame.prototype.update = function () {
 
 };
 
-MyGame.prototype.UpdateDyePack = function(dyePack) {
-    
-};
-
 MyGame.prototype.SpawnDyePack = function(spawnPos){
     
     
