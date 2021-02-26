@@ -28,12 +28,15 @@ function Hero(spriteTexture) {
     this.mSrite.getXform().setPosition(35, 50);
     this.mSrite.getXform().setSize(9, 12);
     this.mSrite.setElementPixelPositions(0, 120, 0, 180);
+    this.xInterp = new Interpolate()
     GameObject.call(this, this.mSrite);
 }
 
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
+    
+    
     if(this.heroHit){
         //console.log(Date.now() - this.heroHitTime);
         if(Date.now() - this.heroHitTime < this.heroHitDuration){

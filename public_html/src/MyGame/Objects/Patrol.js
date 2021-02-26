@@ -10,7 +10,9 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Patrol(spriteTexture) {
-    
+    var date = new Date;
+    this.prevUpdateTime = date.getTime();
+    this.currUpdateTime = date.getTime();
     this.offEdge = false;
     this.wingDeath = false;
     this.showBound = false;
@@ -61,7 +63,7 @@ function Patrol(spriteTexture) {
     var center = vec2.fromValues(this.BBcenterX, this.BBcenterY);
     this.bigBox = new BoundingBox(center, this.BBwidth, this.BBheight);
     //console.log(this.bigBox.minX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.maxY());
-    this.speed = (5 + (5 * Math.random())) / 60;
+    this.speed = 5 + (5 * Math.random());
     this.dir = 90 * Math.random();
     this.verticalSpeed = Math.sin(this.dir) * this.speed;
     this.horizontalSpeed = Math.cos(this.dir) * this.speed;
@@ -167,8 +169,15 @@ Patrol.prototype.update = function () {
     if(this.bigBox.minY() <= (640/940) * -125 && this.verticalSpeed < 0) {
         this.verticalSpeed *= -1;
     }
-    
-    this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + this.horizontalSpeed, this.mHead.getXform().getYPos() + this.verticalSpeed);
+    var date = new Date;
+    this.currUpdateTime = date.getTime();
+    var timePassed = this.currUpdateTime - this.prevUpdateTime;
+    this.prevUpdateTime = this.currUpdateTime;
+    var realHSpeed = this.horizontalSpeed / 1000;
+    realHSpeed *= timePassed;
+    var realVSpeed = this.verticalSpeed / 1000;
+    realVSpeed *= timePassed;
+    this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + realHSpeed, this.mHead.getXform().getYPos() + realVSpeed);
 
     
     

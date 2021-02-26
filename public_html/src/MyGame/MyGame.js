@@ -42,7 +42,7 @@ function MyGame() {
     this.mFocusObj = null;
 
     this.mChoice = 'D';
-}
+};
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.prototype.loadScene = function () {
@@ -281,7 +281,10 @@ MyGame.prototype.update = function () {
         this.mFocusObj = this.mHero;
         this.mChoice = 'H';
     }
-
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J)) {
+        this.mPatrolSet.simulateHit();
+        //this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 - zoomDelta);
+    }
     // TODO delete
     /*
     // zoom
@@ -290,10 +293,6 @@ MyGame.prototype.update = function () {
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.M)) {
         this.mCamera.zoomBy(1 + zoomDelta);
-    }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J)) {
-        this.mPatrolSet.simulateHit();
-        //this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 - zoomDelta);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
         this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 + zoomDelta);
