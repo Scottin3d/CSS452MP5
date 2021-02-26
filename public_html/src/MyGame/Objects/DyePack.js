@@ -38,7 +38,6 @@ DyePack.prototype.update = function () {
             var newPos = [this.mOrigLocation[0] + newResults[0],
                 this.mOrigLocation[1] + newResults[1]];
             this.getXform().setPosition(newPos[0], newPos[1]);
-            console.log(this.mOrigLocation);
         }else {
             this.mAlive = false;
         }
@@ -70,7 +69,6 @@ DyePack.prototype.draw = function (camera) {
 DyePack.prototype.shake = function() {
     if (this.mActive){
         this.mShakePack = new ShakePosition(4, 0.2, 20, 300);
-        console.log(this.mActive);
         this.mOrigLocation = vec2.clone(this.getXform().getPosition());
         this.kSpeed = 0;
     }
