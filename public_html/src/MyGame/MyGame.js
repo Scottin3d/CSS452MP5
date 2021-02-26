@@ -167,7 +167,7 @@ MyGame.prototype.update = function () {
     // update dye packs
     for (var i = 0; i < this.mDyePackSet.size(); i++) {
         var dyePack = this.mDyePackSet.getObjectAt(i);
-        if(dyePack.isActive()) {
+        if(dyePack.getActive()) {
             var checkHit = this.mPatrolSet.checkCollision(dyePack);
             dyePack.possibleHit(checkHit);
         }

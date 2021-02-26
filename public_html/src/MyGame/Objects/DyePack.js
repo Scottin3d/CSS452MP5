@@ -88,7 +88,7 @@ DyePack.prototype.possibleHit = function(value) {
         this.mActive = false;
         this.shake();
     }else if (value == 0) {
-        this.mDeceleration += 0.1;
+        this.mDeceleration = 0.1;
     } else {
         this.mDeceleration = 0
     }
