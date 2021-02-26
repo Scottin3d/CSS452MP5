@@ -33,13 +33,15 @@ DyePackSet.prototype.createDyePack = function(spawnPos) {
     GameObjectSet.prototype.addToSet.call(this, packClone);
 };
 
-DyePackSet.prototype.hitEvent = function(index) {
-    
-};
-
 DyePackSet.prototype.hitAllEvent = function() {
     for (var i = 0; i < this.mSet.length; i++) {
-        this.hitEvent(i);
+        this.mSet[i].possibleHit(1);
+    }
+};
+
+DyePackSet.prototype.slowDown = function() {
+    for (var i = 0; i < this.mSet.length; i++) {
+        this.mSet[i].possibleHit(0);
     }
 };
 

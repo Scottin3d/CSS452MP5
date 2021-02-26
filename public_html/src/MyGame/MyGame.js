@@ -242,6 +242,12 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J)) {
         this.mPatrolSet.simulateHit(); 
     }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
+        this.mDyePackSet.slowDown();
+    }
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.S)) {
+        this.mDyePackSet.hitAllEvent();
+    }
     // Pan camera to world center
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.L)) {
         this.mCamera.panTo( this.mCamera.getWCCenter()[0], this.mCamera.getWCCenter()[l]);
