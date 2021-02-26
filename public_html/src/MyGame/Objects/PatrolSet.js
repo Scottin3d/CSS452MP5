@@ -41,6 +41,9 @@ PatrolSet.prototype.update = function () {
         }
     }
     this.mSet = newMSet;
+    
+    // input
+    
 };
 
 PatrolSet.prototype.setautoSpawn = function() {

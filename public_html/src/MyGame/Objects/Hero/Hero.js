@@ -12,6 +12,7 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Hero(spriteTexture) {
+    
     this.heroHit = false;
     this.heroHitTime = 0;
     this.heroHitInterval = 0;
@@ -19,7 +20,6 @@ function Hero(spriteTexture) {
     this.heroHitFrequency = null;
     this.heroHitDuration = null;
     
-    this.heroShake = null;
     
     this.kDelta = 0.3;
 
@@ -28,30 +28,28 @@ function Hero(spriteTexture) {
     this.mSrite.getXform().setPosition(35, 50);
     this.mSrite.getXform().setSize(9, 12);
     this.mSrite.setElementPixelPositions(0, 120, 0, 180);
+    
+    this.heroState = new HeroState(this.mSrite.getXform().getPosition(), this.mSrite.getXform().getSize());
+    this.heroShake = null;
     GameObject.call(this, this.mSrite);
 }
 
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
 Hero.prototype.update = function () {
-    if(this.heroHit){
-        console.log(Date.now() - this.heroHitTime);
-        if(Date.now() - this.heroHitTime < this.heroHitDuration){
-            var sizeX = this.getXform().getWidth() * Math.sin(Date.now() /  this.heroHitFrequency);
-            console.log(sizeX);
-            
-        }else{
-            this.heroHit = false;
-            this.heroHitTime = 0;
-            this.heroHitAmplitude = null;
-            this.heroHitFrequency = null;
-            this.heroHitDuration = null;
+    if (this.heroShake !== null) {
+        if (this.heroShake.shakeDone()) {
+            this.heroShake = null;
+        } else {
+            this.heroShake.setRefCenter(this.mSrite.getXform().getPosition());
+            this.heroShake.updateShakeState();
         }
     }
+    this.heroState.updateHeroState();
     
     // Q
-    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.L)){
-        this.heroShake = new ShakePosition(-2, -2, 20, 30);
+    if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)){
+        this.hit([2, 2], 4, 60);
         
     }
     
@@ -77,5 +75,7 @@ Hero.prototype.hit = function(amplitude, frequency, duration){
     this.heroHitAmplitude = amplitude;
     this.heroHitFrequency = frequency;
     this.heroHitDuration = duration;
+    
+    this.heroShake = new HeroShake(this.heroState, amplitude[0], amplitude[1], frequency, duration);
     
 };
