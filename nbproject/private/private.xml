@@ -16,16 +16,18 @@
         <group name="AllBookProjects"/>
         <group name="Apress-2d-game-engine"/>
         <group>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Viewports.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Cameras/Camera_Manipulation.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Utils/ShakePosition.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Core/Engine_Input.js</file>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Hero/Hero.js</file>
-            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/styles.css</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/Utils/Interpolate.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/DyePackSet.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/index.html</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/Engine/GameObjects/GameObject.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/DyePack.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Patrol.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Viewports.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/Hero/Hero.js</file>
+            <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/styles.css</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/Objects/PatrolSet.js</file>
             <file>file:/C:/Users/scott/Google%20Drive/School/UW%20Bothell/Winter2021/CSS452/CSS452MP5/public_html/src/MyGame/MyGame.js</file>
         </group>

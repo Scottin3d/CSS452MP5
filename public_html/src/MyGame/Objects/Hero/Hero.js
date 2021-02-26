@@ -25,6 +25,7 @@ function Hero(spriteTexture) {
     this.mSrite.getXform().setSize(9, 12);
     this.mSrite.setElementPixelPositions(0, 120, 0, 180);
     
+    this.originalSize = this.mSrite.getXform().getSize();
     this.heroShake = null;
     this.topInterpX = new Interpolate(this.mSrite.getXform().getXPos(), 120, 0.05);
     this.topInterpY = new Interpolate(this.mSrite.getXform().getYPos(), 120, 0.05);
@@ -34,7 +35,7 @@ function Hero(spriteTexture) {
 
 gEngine.Core.inheritPrototype(Hero, GameObject);
 
-Hero.prototype.update = function () {
+Hero.prototype.update = function (patrol) {
     if (this.heroShake !== null) {
         if (!this.heroShake.shakeDone()) {
             var newResults = this.heroShake.getShakeResults();
@@ -42,18 +43,26 @@ Hero.prototype.update = function () {
                 this.mOrigLocation[1] + newResults[1]];
             this.getXform().setSize(newSize[0], newSize[1]);
         }else{
+            this.heroHit = false;
             this.heroShake = null;  
+            
         }
+    }
+    
+    if(!this.heroHit){
+        this.getXform().setSize(9, 12);
+    }
+    
+    if(patrol.hitHero(this) && !this.heroHit){                                  // will only trigger if not already going
+        this.hit([4.5, 6], 4, 60);
     }
     
     // Q
     if(gEngine.Input.isKeyClicked(gEngine.Input.keys.Q)){
-        this.hit([2, 2], 4, 60);
-        
+        this.hit([18, 24], 4, 120);
     }
     
-    
-    
+    document.getElementById("heroHit").innerHTML = this.heroHit;
 };
 
 Hero.prototype.updatePostion = function(mousePos){
@@ -82,7 +91,7 @@ Hero.prototype.checkBounds = function(center, size){
 };
 
 Hero.prototype.hit = function(amplitude, frequency, duration){
-    
+    this.heroHit = true;
     //this.heroShake = new HeroShake(this.heroState, amplitude[0], amplitude[1], frequency, duration);
     this.heroShake = new ShakePosition(amplitude[0], amplitude[1], frequency, duration);
     this.mOrigLocation = vec2.clone(this.getXform().getSize());

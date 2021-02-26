@@ -1,4 +1,4 @@
-/* File: DyePack.js 
+ /* File: DyePack.js 
  *
  * Creates and initializes a simple DyePack
  */
@@ -87,9 +87,11 @@ DyePack.prototype.possibleHit = function(value) {
     if (value == 1) {
         this.shake();
         this.mActive = false;
+        return true;
     }else if (value == 0) {
         this.mDeceleration = 0.1;
     } else {
         this.mDeceleration = 0
     }
+    return false;
 };
