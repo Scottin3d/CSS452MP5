@@ -38,7 +38,7 @@ DyePackSet.prototype.checkBound = function(index, camera) {
     if (dyePackPos[0] - dyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
         this.mSet.splice(index, 1);
     }
-}
+};
 
 DyePackSet.prototype.createDyePack = function(spawnPos) {
     var packClone = new DyePack(this.kMinionSprite);
@@ -55,5 +55,5 @@ DyePackSet.prototype.hitAllEvent = function() {
     for (var i = 0; i < this.mSet.length; i++) {
         this.hitEvent(i);
     }
-}
+};
 

@@ -32,6 +32,7 @@ DyePack.prototype.update = function () {
     if (currentTime.getTime() - this.mSpawnTime >= 5000) {
         this.mAlive = false;
     }
+    
     if (this.mShakePack !== null) {
         if (!this.mShakePack.shakeDone()) {
             var newResults = this.mShakePack.getShakeResults();

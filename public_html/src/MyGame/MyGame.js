@@ -194,17 +194,24 @@ MyGame.prototype.update = function () {
             this.mViewports.setViewportText(0, vmsg);                           // if so, sets text to mag (hero, mouse)
         }
         
-        if (heroMag > 6) {                                                      // 6 is arbitrary, it is the threshold to 
-            this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(),// stop moving the hero
-                                        this.mCamera.mouseWCY()), 0.05);
-            this.mHero.setSpeed(0.1);                                           // speed is arbitrary
+        
+        if (heroMag > 1) {  
+            this.mHero.rotateObjPointTo(vec2.fromValues(this.mCamera.mouseWCX(),  
+            this.mCamera.mouseWCY()), 0.05);
+            
+           this.mHero.updatePostion([this.mCamera.mouseWCX(),this.mCamera.mouseWCY()]);
             GameObject.prototype.update.call(this.mHero);
-            var heroPos = this.mHero.getXform().getPosition();          
+                     
             this.mViewports.setViewportWC(0, heroPos);                          // update viewport[0] to hero center
             
             // bound hero to main camera
             this.mCamera.clampAtBoundary(this.mHero.getXform(), 0.9);
         }                              
+    }
+    
+    if(this.mPatrolSet.hitHero(this.mhero)){
+        this.mHero.hit([4.5, 6], 4, 60);
+        
     }
     //**************************************************************************
     
@@ -212,7 +219,7 @@ MyGame.prototype.update = function () {
     // some of these can be moved to local class
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
         this.mDyePackSet.createDyePack(heroPos);
-        this.mHero.hit(.5, 4, 60);
+        //this.mHero.hit(.5, 4, 60);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
         this.msgBrdSpd = (this.msgBrdSpd <= 2) ? this.msgBrdSpd += 0.25 : 2;
