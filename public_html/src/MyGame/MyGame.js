@@ -35,13 +35,14 @@ function MyGame() {
     // the hero and the support objects
     this.mHero = null;
     this.mPatrolSet = null;
+    this.mDyePackSet = null;
     this.mPortal = null;
     this.mLMinion = null;
     this.mRMinion = null;
     this.mFocusObj = null;
 
     this.mChoice = 'D';
-}
+};
 gEngine.Core.inheritPrototype(MyGame, Scene);
 
 MyGame.prototype.loadScene = function () {
@@ -65,6 +66,7 @@ MyGame.prototype.initialize = function () {
     var c; 
     // objects
     this.mPatrolSet = new PatrolSet(this.kMinionSprite);
+    this.mDyePackSet = new DyePackSet(this.kMinionSprite);
     this.mHero = new Hero(this.kMinionSprite);
     this.mPortal = new TextureObject(this.kMinionPortal, 50, 30, 10, 10);
     
@@ -122,11 +124,8 @@ MyGame.prototype.drawCamera = function (camera) {
     this.mBg.draw(camera);
     this.mHero.draw(camera);
     
-    if(this.dyePacksInScene.length > 0){
-        for (var i = 0; i < this.dyePacksInScene.length; i++) {
-            var pack = this.dyePacksInScene[i];
-            pack.draw(camera);
-        }
+    if(this.mDyePackSet.size() > 0){
+        this.mDyePackSet.draw(camera);
     }
     this.mPatrolSet.draw(camera);
 };
@@ -166,18 +165,12 @@ MyGame.prototype.update = function () {
     
     
     // update dye packs
-    for (var i = 0; i < this.dyePacksInScene.length; i++) {
-        var dyePack = this.dyePacksInScene[i];
-        var mainCameraSize = this.mCamera.getWCWidth();
-        var mainCameraPos = this.mCamera.getWCCenter()[0];
-        var firstDyePackPos = this.dyePacksInScene[0].getXform().getPosition();
-        var firstDyePackSize = this.dyePacksInScene[0].getXform().getSize();
-        // if dye pack is out of frame, remove from array
-        if (firstDyePackPos[0] - firstDyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
-            this.dyePacksInScene.shift();
-            i = 0;
+    for (var i = 0; i < this.mDyePackSet.size(); i++) {
+        var dyePack = this.mDyePackSet.getObjectAt(i);
+        if(dyePack.getActive()) {
+            var checkHit = this.mPatrolSet.checkCollision(dyePack);
+            dyePack.possibleHit(checkHit);
         }
-        this.mPatrolSet.checkCollision(dyePack.getBBox());
         dyePack.update();
     }
     //**************************************************************************
@@ -218,8 +211,7 @@ MyGame.prototype.update = function () {
     // user input
     // some of these can be moved to local class
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Space)) {
-        var spawnPos = heroPos;
-        this.SpawnDyePack(spawnPos); 
+        this.mDyePackSet.createDyePack(heroPos);
         this.mHero.hit(.5, 4, 60);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
@@ -231,7 +223,7 @@ MyGame.prototype.update = function () {
     //**************************************************************************
     
     // update counters
-    msgBrd += "    Dye Packs In Scene: " + this.dyePacksInScene.length;
+    msgBrd += "    Dye Packs In Scene: " + this.mDyePackSet.size();
     msgBrd += "    Patrol Units Spawned: " + this.mPatrolSet.patrolSize();
     msgBrd += "    Auto Spawn Patrol Units: " + this.mPatrolSet.isAutoSpawnOn();
     var msgBrdLng = this.vMessages.getXform().getWidth() / 2;
@@ -271,6 +263,7 @@ MyGame.prototype.update = function () {
     }
     
     this.mPatrolSet.update();
+    this.mDyePackSet.update(this.mCamera);
     this.mLMinion.update();  // for sprite animation
     this.mRMinion.update();
     this.mHero.update();     // for WASD movement
@@ -292,7 +285,10 @@ MyGame.prototype.update = function () {
         this.mFocusObj = this.mHero;
         this.mChoice = 'H';
     }
-
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J)) {
+        this.mPatrolSet.simulateHit();
+        //this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 - zoomDelta);
+    }
     // TODO delete
     /*
     // zoom
@@ -301,10 +297,6 @@ MyGame.prototype.update = function () {
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.M)) {
         this.mCamera.zoomBy(1 + zoomDelta);
-    }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.J)) {
-        this.mPatrolSet.simulateHit();
-        //this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 - zoomDelta);
     }
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.K)) {
         this.mCamera.zoomTowards(this.mFocusObj.getXform().getPosition(), 1 + zoomDelta);

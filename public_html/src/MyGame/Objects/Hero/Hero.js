@@ -28,9 +28,13 @@ function Hero(spriteTexture) {
     this.mSrite.getXform().setPosition(35, 50);
     this.mSrite.getXform().setSize(9, 12);
     this.mSrite.setElementPixelPositions(0, 120, 0, 180);
+
     
     this.heroState = new HeroState(this.mSrite.getXform().getPosition(), this.mSrite.getXform().getSize());
     this.heroShake = null;
+
+    this.xInterp = new Interpolate();
+    
     GameObject.call(this, this.mSrite);
 }
 
@@ -45,6 +49,22 @@ Hero.prototype.update = function () {
             this.heroShake.updateShakeState();
         }
     }
+    /*
+    if(this.heroHit){
+        //console.log(Date.now() - this.heroHitTime);
+        if(Date.now() - this.heroHitTime < this.heroHitDuration){
+            var sizeX = this.getXform().getWidth() * Math.sin(Date.now() /  this.heroHitFrequency);
+            //console.log(sizeX);
+            
+        }else{
+            this.heroHit = false;
+            this.heroHitTime = 0;
+            this.heroHitAmplitude = null;
+            this.heroHitFrequency = null;
+            this.heroHitDuration = null;
+
+        }
+    }*/
     this.heroState.updateHeroState();
     
     // Q

@@ -10,7 +10,9 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function Patrol(spriteTexture) {
-    
+    var date = new Date;
+    this.prevUpdateTime = date.getTime();
+    this.currUpdateTime = date.getTime();
     this.offEdge = false;
     this.wingDeath = false;
     this.showBound = false;
@@ -19,6 +21,7 @@ function Patrol(spriteTexture) {
     this.mHead.getXform().setPosition(Math.random() * 125, -42.5 + (Math.random() * 85)); // gross hardcoding values in based on main camera width height, and pos in world space
     this.mHead.getXform().setSize(7.5, 7.5);
     this.mHead.setElementPixelPositions(600, 700, 0, 180);
+    this.mHead._setTexInfo();
     
     this.mTopWing = new SpriteAnimateRenderable(spriteTexture);
     this.mTopWing.setColor([1, 1, 1, 0]);
@@ -30,6 +33,7 @@ function Patrol(spriteTexture) {
                                     0);         // horizontal padding in between
     this.mTopWing.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateSwing);
     this.mTopWing.setAnimationSpeed(30);
+    this.mTopWing._setTexInfo();
     
     this.mBottomWing = new SpriteAnimateRenderable(spriteTexture);
     this.mBottomWing.setColor([1, 1, 1, 0]);
@@ -41,6 +45,7 @@ function Patrol(spriteTexture) {
                                     0);         // horizontal padding in between
     this.mBottomWing.setAnimationType(SpriteAnimateRenderable.eAnimationType.eAnimateSwing);
     this.mBottomWing.setAnimationSpeed(30);
+    this.mBottomWing._setTexInfo();
     
     this.topInterpX = new Interpolate(this.mTopWing.getXform().getXPos(), 120, 0.05);
     this.topInterpY = new Interpolate(this.mTopWing.getXform().getYPos(), 120, 0.05);
@@ -58,7 +63,7 @@ function Patrol(spriteTexture) {
     var center = vec2.fromValues(this.BBcenterX, this.BBcenterY);
     this.bigBox = new BoundingBox(center, this.BBwidth, this.BBheight);
     //console.log(this.bigBox.minX(), this.bigBox.minY(), this.bigBox.maxX(), this.bigBox.maxY());
-    this.speed = (5 + (5 * Math.random())) / 60;
+    this.speed = 5 + (5 * Math.random());
     this.dir = 90 * Math.random();
     this.verticalSpeed = Math.sin(this.dir) * this.speed;
     this.horizontalSpeed = Math.cos(this.dir) * this.speed;
@@ -164,8 +169,15 @@ Patrol.prototype.update = function () {
     if(this.bigBox.minY() <= (640/940) * -125 && this.verticalSpeed < 0) {
         this.verticalSpeed *= -1;
     }
-    
-    this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + this.horizontalSpeed, this.mHead.getXform().getYPos() + this.verticalSpeed);
+    var date = new Date;
+    this.currUpdateTime = date.getTime();
+    var timePassed = this.currUpdateTime - this.prevUpdateTime;
+    this.prevUpdateTime = this.currUpdateTime;
+    var realHSpeed = this.horizontalSpeed / 1000;
+    realHSpeed *= timePassed;
+    var realVSpeed = this.verticalSpeed / 1000;
+    realVSpeed *= timePassed;
+    this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + realHSpeed, this.mHead.getXform().getYPos() + realVSpeed);
 
     
     
@@ -237,6 +249,9 @@ Patrol.prototype.getHeadBB = function() {
     return this.headBox;
 };
 
+Patrol.prototype.getBB = function() {
+    return this.bigBox;
+};
 Patrol.prototype.getTWBB = function() {
     return this.topWingBox;
 };
@@ -246,6 +261,7 @@ Patrol.prototype.getBWBB = function() {
 };
 
 Patrol.prototype.headHit = function() {
+    console.log("head hit");
     this.mHead.getXform().setPosition(this.mHead.getXform().getXPos() + 5, this.mHead.getXform().getYPos());
 };
 
