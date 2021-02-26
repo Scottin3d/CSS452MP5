@@ -12,8 +12,13 @@
 function DyePack(spriteTexture) {
     this.kRefWidth = 80;
     this.kRefHeight = 130;
-    this.kDelta = 0.5;
+    this.kSpeed = 2;
     this.mShakePack = null;
+    this.mAlive = true;
+    this.mSpawnTime = new Date().getTime();
+    this.mActive = true;
+    this.mOrigLocation = null;
+    this.mDeceleration = 0;
 
     this.mDyePack = new SpriteRenderable(spriteTexture);
     this.mDyePack.setColor([1, 1, 1, 0]);
@@ -23,17 +28,68 @@ function DyePack(spriteTexture) {
 gEngine.Core.inheritPrototype(DyePack, GameObject);
 
 DyePack.prototype.update = function () {
+    var currentTime = new Date();
+    if (currentTime.getTime() - this.mSpawnTime >= 5000) {
+        this.mAlive = false;
+    }
+    if (this.mShakePack !== null) {
+        if (!this.mShakePack.shakeDone()) {
+            var newResults = this.mShakePack.getShakeResults();
+            var newPos = [this.getXform().getPosition()[0] + newResults[0],
+                this.getXform().getPosition()[1] + newResults[1]];
+            this.getXform().setPosition(newPos[0], newPos[1]);
+        }else {
+            this.mAlive = false;
+        }
+    }
+    
+    if (this.kSpeed > 0){
+        this.kSpeed -= this.mDeceleration;
+    }else {
+        this.kSpeed = 0;
+    }
+    
+    if (this.kSpeed == 0) {
+        this.mAlive = false;
+    }
+    
     var xform = this.getXform();    
 
     if (this.isVisible()) {
-        xform.incXPosBy(this.kDelta);
+        xform.incXPosBy(this.kSpeed);
     }
 };
 
 DyePack.prototype.draw = function (camera) {
+    this.mLifeSpan++;
     this.mDyePack.draw(camera);
 };
 
 DyePack.prototype.shake = function() {
-    
+    this.mShakePack = new ShakePosition(4, 0.2, 20, 300);
+    this.mOrigLocation = this.getXform().getPosition();
+    this.kSpeed = 0;
+};
+
+DyePack.prototype.isAlive = function() {
+    return this.mAlive;
+};
+
+DyePack.prototype.getActive = function() {
+    return this.mActive;
+};
+
+DyePack.prototype.getSpeed = function() {
+    return this.kSpeed;
+};
+
+DyePack.prototype.possibleHit = function(value) {
+    if (value == 1) {
+        this.mActive = false;
+        this.shake();
+    }else if (value == 0) {
+        this.mDeceleration += 0.1;
+    } else {
+        this.mDeceleration = 0
+    }
 };

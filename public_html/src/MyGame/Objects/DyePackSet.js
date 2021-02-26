@@ -15,17 +15,32 @@ gEngine.Core.inheritPrototype(DyePackSet, GameObjectSet);
 DyePackSet.prototype.update = function(camera) {
     
     for (var i = 0; i < this.mSet.length; i++) {
-        var mainCameraSize = camera.getWCWidth();
-        var mainCameraPos = camera.getWCCenter()[0];
-        var firstDyePackPos = this.mSet[0].getXform().getPosition();
-        var firstDyePackSize = this.mSet[0].getXform().getSize();
-        // if dye pack is out of frame, remove from array
-        if (firstDyePackPos[0] - firstDyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
-            this.mSet.splice(i, 1);
-            i = 0;
+        var dyePack = this.mSet[i];
+        if (!dyePack.isAlive()) {
+           this.mSet.splice(i, 1);
+           i = 0; 
+        }else if (dyePack.isAlive()) {
+            if (dyePack.getSpeed() == 0) {
+                this.mSet.splice(i, 1);
+                i = 0;  
+            }
+        }else{
+            this.checkBound(i, camera);
         }
     }
     GameObjectSet.prototype.update.call(this);
+};
+
+DyePackSet.prototype.checkBound = function(index, camera) {
+    var dyePack = this.mSet[index];
+    var mainCameraSize = camera.getWCWidth();
+    var mainCameraPos = camera.getWCCenter()[0];
+    var dyePackPos = dyePack.getXform().getPosition();
+    var dyePackSize = dyePack.getXform().getSize();
+    // if dye pack is out of frame, remove from array
+    if (dyePackPos[0] - dyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
+        this.mSet.splice(index, 1);
+    }
 }
 
 DyePackSet.prototype.createDyePack = function(spawnPos) {
@@ -34,4 +49,14 @@ DyePackSet.prototype.createDyePack = function(spawnPos) {
     packClone.getXform().setSize(2, 3.25);
     GameObjectSet.prototype.addToSet.call(this, packClone);
 };
+
+DyePackSet.protype.hitEvent = function(index) {
+    
+}
+
+DyePackSet.protype.hitAllEvent = function() {
+    for (var i = 0; i < this.mSet.length; i++) {
+        this.hitEvent(i);
+    }
+}
 
