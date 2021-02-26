@@ -35,23 +35,25 @@ DyePack.prototype.update = function () {
     if (this.mShakePack !== null) {
         if (!this.mShakePack.shakeDone()) {
             var newResults = this.mShakePack.getShakeResults();
-            var newPos = [this.getXform().getPosition()[0] + newResults[0],
-                this.getXform().getPosition()[1] + newResults[1]];
+            var newPos = [this.mOrigLocation[0] + newResults[0],
+                this.mOrigLocation[1] + newResults[1]];
             this.getXform().setPosition(newPos[0], newPos[1]);
+            console.log(this.mOrigLocation);
         }else {
+            this.mAlive = false;
+        }
+    } else {
+        if (this.kSpeed > 0){
+            this.kSpeed -= this.mDeceleration;
+        }else {
+            this.kSpeed = 0;
+        }
+
+        if (this.kSpeed === 0) {
             this.mAlive = false;
         }
     }
     
-    if (this.kSpeed > 0){
-        this.kSpeed -= this.mDeceleration;
-    }else {
-        this.kSpeed = 0;
-    }
-    
-    if (this.kSpeed == 0) {
-        this.mAlive = false;
-    }
     
     var xform = this.getXform();    
 
@@ -66,9 +68,12 @@ DyePack.prototype.draw = function (camera) {
 };
 
 DyePack.prototype.shake = function() {
-    this.mShakePack = new ShakePosition(4, 0.2, 20, 300);
-    this.mOrigLocation = this.getXform().getPosition();
-    this.kSpeed = 0;
+    if (this.mActive){
+        this.mShakePack = new ShakePosition(4, 0.2, 20, 300);
+        console.log(this.mActive);
+        this.mOrigLocation = vec2.clone(this.getXform().getPosition());
+        this.kSpeed = 0;
+    }
 };
 
 DyePack.prototype.isAlive = function() {
@@ -79,14 +84,10 @@ DyePack.prototype.getActive = function() {
     return this.mActive;
 };
 
-DyePack.prototype.getSpeed = function() {
-    return this.kSpeed;
-};
-
 DyePack.prototype.possibleHit = function(value) {
     if (value == 1) {
-        this.mActive = false;
         this.shake();
+        this.mActive = false;
     }else if (value == 0) {
         this.mDeceleration = 0.1;
     } else {

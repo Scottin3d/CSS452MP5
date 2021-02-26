@@ -20,10 +20,7 @@ DyePackSet.prototype.update = function(camera) {
            this.mSet.splice(i, 1);
            i = 0; 
         }else if (dyePack.isAlive()) {
-            if (dyePack.getSpeed() == 0) {
-                this.mSet.splice(i, 1);
-                i = 0;  
-            }
+            
         }else{
             this.checkBound(i, camera);
         }
