@@ -25,11 +25,7 @@ function Hero(spriteTexture) {
     this.mSrite.getXform().setSize(9, 12);
     this.mSrite.setElementPixelPositions(0, 120, 0, 180);
     
-    
-    //this.heroState = new HeroState(this.mSrite.getXform().getPosition(), this.mSrite.getXform().getSize());
     this.heroShake = null;
-    this.xInterp = new Interpolate();
-    
     this.topInterpX = new Interpolate(this.mSrite.getXform().getXPos(), 120, 0.05);
     this.topInterpY = new Interpolate(this.mSrite.getXform().getYPos(), 120, 0.05);
     
@@ -55,7 +51,6 @@ Hero.prototype.update = function () {
         this.hit([2, 2], 4, 60);
         
     }
-    
     
     
     
