@@ -19,25 +19,11 @@ DyePackSet.prototype.update = function(camera) {
         if (!dyePack.isAlive()) {
            this.mSet.splice(i, 1);
            i = 0; 
-        }else if (dyePack.isAlive()) {
-            
-        }else{
-            this.checkBound(i, camera);
+        }else {
+            dyePack._checkBound(camera);
         }
     }
     GameObjectSet.prototype.update.call(this);
-};
-
-DyePackSet.prototype.checkBound = function(index, camera) {
-    var dyePack = this.mSet[index];
-    var mainCameraSize = camera.getWCWidth();
-    var mainCameraPos = camera.getWCCenter()[0];
-    var dyePackPos = dyePack.getXform().getPosition();
-    var dyePackSize = dyePack.getXform().getSize();
-    // if dye pack is out of frame, remove from array
-    if (dyePackPos[0] - dyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
-        this.mSet.splice(index, 1);
-    }
 };
 
 DyePackSet.prototype.createDyePack = function(spawnPos) {

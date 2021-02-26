@@ -62,6 +62,17 @@ DyePack.prototype.update = function () {
     }
 };
 
+DyePack.prototype._checkBound = function(camera) {
+    var mainCameraSize = camera.getWCWidth();
+    var mainCameraPos = camera.getWCCenter()[0];
+    var dyePackPos = this.getXform().getPosition();
+    var dyePackSize = this.getXform().getSize();
+    // if dye pack is out of frame, remove from array
+    if (dyePackPos[0] - dyePackSize[0] / 2 >= mainCameraPos + mainCameraSize / 2) {
+        this.mAlive = false;
+    }
+};
+
 DyePack.prototype.draw = function (camera) {
     this.mLifeSpan++;
     this.mDyePack.draw(camera);
