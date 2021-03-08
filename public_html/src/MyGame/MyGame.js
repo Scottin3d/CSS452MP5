@@ -98,7 +98,6 @@ MyGame.prototype.initialize = function () {
     this.cButton.getXform().setPosition(20, 60);
     this.cButton.getXform().setSize(50, 20);
     
-    this.UI.AddElement(this.cButton);
     //this.UI.AddButton();
     
     // Large background image
@@ -123,8 +122,8 @@ MyGame.prototype.initialize = function () {
     this.mMsg[2].setColor([1, 1, 1, 1]);
     this.mMsg[2].getXform().setPosition(0, 20);
     this.mMsg[2].setTextHeight(5);
+    this.UI.AddElement(this.cButton, this.callback);
 };
-
 
 MyGame.prototype.drawCamera = function (camera) {
     camera.setupViewProjection();
@@ -154,7 +153,6 @@ MyGame.prototype.draw = function () {
     this.mMsg[2].draw(this.vCanvas);
     // dont clear viewport
 };
-
 // The Update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
 MyGame.prototype.update = function () {
@@ -219,7 +217,7 @@ MyGame.prototype.update = function () {
        var mouse = [this.mCamera.mouseWCX(), this.mCamera.mouseWCY()];
        var element = this.UI.IsMouseOverElement(mouse);
        if(element[0]){
-          this.UI.TestClick();
+          this.UI.elementClick(element[1]);
        }
         
         
@@ -290,4 +288,9 @@ MyGame.prototype.update = function () {
     
     
     
+};
+
+MyGame.prototype.callback = function() {
+    console.log(this.cButton.getXform().getHeight());
+   // this., mCamera.zoomBy(1 - 0.05);
 };

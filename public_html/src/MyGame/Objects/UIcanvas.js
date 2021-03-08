@@ -35,17 +35,19 @@ UIcanvas.prototype.draw = function () {
     this.UIcamera.setupCanvas();
     
     for(var i = 0; i < this.UIElements.length; i++){
-        this.UIElements[i].draw(this.UIcamera);
+        this.UIElements[i].getElement().draw(this.UIcamera);
         
     }
     this.mMsg.draw(this.UIcamera);
 };
 
-UIcanvas.prototype.AddElement = function (element){
+UIcanvas.prototype.AddElement = function (element, callback){
     if(this.UIElements === null){
         this.UIElements = [];
     }
-    this.UIElements.push(element);
+    //callback();
+    var uielem = new UIelement(element, callback);
+    this.UIElements.push(uielem);
 };
 UIcanvas.prototype.AddButton = function (){
     if(this.UIElements === null){
@@ -62,21 +64,30 @@ UIcanvas.prototype.AddButton = function (){
 
 UIcanvas.prototype.TestClick = function (){
     this.mMsg.setText("Clicked!");
-    
+    for(var i = 0; i < this.UIElements.length; i++){
+        
+    }
 };
-
+UIcanvas.prototype.elementClick = function(element) {
+    for(var i = 0; i < this.UIElements.length; i++){
+        if(element === this.UIElements[i].getElement()) {
+            //console.log("found a match");
+            this.UIElements[i].runCallback();
+        }
+    }
+};
 UIcanvas.prototype.IsMouseOverElement = function (mousePosition){
     for(var i = 0; i < this.UIElements.length; i++){
-        var buttonPos = this.UIElements[i].getXform().getPosition(); 
-        var buttonH = this.UIElements[i].getXform().getHeight();
-        var buttonW = this.UIElements[i].getXform().getWidth();
+        var buttonPos = this.UIElements[i].getElement().getXform().getPosition(); 
+        var buttonH = this.UIElements[i].getElement().getXform().getHeight();
+        var buttonW = this.UIElements[i].getElement().getXform().getWidth();
 
         if(mousePosition[0] >= buttonPos[0] - (buttonW / 2) &&
            mousePosition[0] <= buttonPos[0] + (buttonW / 2) &&    
            mousePosition[1] <= buttonPos[1] + (buttonH / 2) &&
            mousePosition[1] >= buttonPos[1] - (buttonH / 2)){
            
-           return [true, this.UIElements[i]];
+           return [true, this.UIElements[i].getElement()];
         }
     }
     
